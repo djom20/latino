@@ -37,7 +37,7 @@ static char *buffer;
 
 int yyparse(ast **root, yyscan_t scanner);
 
-ast *lat_analizar_expresion(lat_vm* vm, char* expr, int* status)
+ast *lat_analizar_expresion(lat_mv *mv, char* expr, int* status)
 {
     setlocale (LC_ALL, "");
     ast *ret = NULL;
@@ -52,7 +52,7 @@ ast *lat_analizar_expresion(lat_vm* vm, char* expr, int* status)
     return ret;
 }
 
-ast *lat_analizar_archivo(lat_vm* vm, char *infile)
+ast *lat_analizar_archivo(lat_mv *mv, char *infile)
 {
     if (infile == NULL)
     {
@@ -92,7 +92,7 @@ ast *lat_analizar_archivo(lat_vm* vm, char *infile)
     }
     buffer[newSize] = '\0';
     int status;
-    return lat_analizar_expresion(vm, buffer, &status);
+    return lat_analizar_expresion(mv, buffer, &status);
 }
 /**
  * Muestra la version de latino en la consola
@@ -133,10 +133,10 @@ void lat_ayuda()
     printf("%s%s\n", "HOME         : ", getenv("HOME"));
 }
 
-static int leer_linea(lat_vm *vm, char* buffer){
+static int leer_linea(lat_mv *mv, char* buffer){
     parse_silent = 1;
     int resultado;
-    char *input;
+    char *input = "";
     //buffer = lat_asignar_memoria(MAX_STR_LENGTH);
     char *tmp = "";
     REPETIR:
@@ -148,7 +148,7 @@ static int leer_linea(lat_vm *vm, char* buffer){
         tmp = concat(tmp, "\n");
         tmp = concat(tmp, input);
         int estatus;
-        lat_analizar_expresion(vm, tmp, &estatus);
+        lat_analizar_expresion(mv, tmp, &estatus);
         if(estatus == 1){
             goto REPETIR;
         }else{
@@ -261,6 +261,7 @@ static void completion(const char *buf, linenoiseCompletions *lc) {
     }
 }
 
+/*
 static char *hints(const char *buf, int *color, int *bold) {
     if (!strcasecmp(buf,"escribir")) {
         *color = 35;
@@ -269,29 +270,31 @@ static char *hints(const char *buf, int *color, int *bold) {
     }
     return NULL;
 }
+*/
 
-static void lat_repl(lat_vm *vm)
+static void lat_repl(lat_mv *mv)
 {
-    char* input;
+    char* input = "";
     char* buf = lat_asignar_memoria(MAX_STR_INTERN);
     ast* tmp = NULL;
     int status;
-    vm->REPL = true;
+    mv->REPL = true;
     //linenoiseSetMultiLine(1);
     linenoiseHistoryLoad("history.txt");
     linenoiseSetCompletionCallback(completion);
     //linenoiseSetHintsCallback(hints);
-    while (leer_linea(vm, buf) != -1)
+    while (leer_linea(mv, buf) != -1)
     {
         parse_silent = 0;
-        tmp = lat_analizar_expresion(vm, buf, &status);
+        tmp = lat_analizar_expresion(mv, buf, &status);
         if(tmp != NULL)
         {
-            lat_objeto *curexpr = nodo_analizar_arbol(vm, tmp);
-            lat_llamar_funcion(vm, curexpr);
-            if(vm->registros[255] != NULL && (strstr(buf, "escribir") == NULL && strstr(buf, "imprimir") == NULL)){
-                lat_apilar(vm, vm->registros[255]);
-                lat_imprimir(vm);
+            lat_objeto *curexpr = nodo_analizar_arbol(mv, tmp);
+            lat_llamar_funcion(mv, curexpr);
+            lat_objeto* resultado = lat_desapilar(mv);
+            if(resultado != NULL && (strstr(buf, "escribir") == NULL && strstr(buf, "imprimir") == NULL)){
+                lat_apilar(mv, resultado);
+                lat_imprimir(mv);
             }
             linenoiseHistoryAdd(replace(buf, "\n", ""));
             linenoiseHistorySave("history.txt");
@@ -310,7 +313,7 @@ int main(int argc, char *argv[])
 
     int i;
     char *infile = NULL;
-    lat_vm *vm = lat_crear_maquina_virtual();
+    lat_mv *mv = lat_crear_maquina_virtual();
     for (i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-v") == 0)
@@ -326,7 +329,7 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "-i") == 0)
         {
             lat_version();
-            lat_repl(vm);
+            lat_repl(mv);
             return EXIT_SUCCESS;
         }
         else
@@ -336,15 +339,15 @@ int main(int argc, char *argv[])
     }
     if(argc > 1 && infile != NULL)
     {
-        vm->REPL = false;
-        ast *tree = lat_analizar_archivo(vm, infile);
+        mv->REPL = false;
+        ast *tree = lat_analizar_archivo(mv, infile);
         if (!tree)
         {
             return EXIT_FAILURE;
         }
-        lat_objeto *mainFunc = nodo_analizar_arbol(vm, tree);
-        lat_llamar_funcion(vm, mainFunc);
-        lat_apilar(vm, vm->registros[255]);
+        lat_objeto *mainFunc = nodo_analizar_arbol(mv, tree);
+        lat_llamar_funcion(mv, mainFunc);
+        //lat_apilar(mv, mv->registros[255]);
         if(file != NULL)
         {
             fclose(file);
@@ -355,10 +358,10 @@ int main(int argc, char *argv[])
 #ifdef _WIN32
         system("cmd");
         //lat_version();
-        //lat_repl(vm);
+        //lat_repl(mv);
 #else
         lat_version();
-        lat_repl(vm);
+        lat_repl(mv);
 #endif
     }
 

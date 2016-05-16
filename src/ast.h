@@ -113,9 +113,6 @@ typedef enum {
   NODO_INCLUIR  /**< Nodo para incluir codigo de otro archivo */
 } nodo_tipo;
 
-/**\brief Objeto tipo maquina virtual */
-//typedef struct lat_vm lat_vm;
-
 /** \brief Nodos en arbol abstacto de sintaxis (abstract syntax tree).
   *
   * Todos los nodos son inicializados con un tipo de nodo */
@@ -124,7 +121,7 @@ typedef struct ast {
   nodo_valor *valor; /**< Valor del nodo */
   struct ast *l; /**< Nodo izquierdo */
   struct ast *r; /**< Nodo derecho */
-  lat_vm *vm;
+  lat_mv *mv;
 } ast;
 
 /** \brief Estado del analizador lexico */
@@ -335,22 +332,22 @@ void nodo_liberar(ast *a);
 
 /** Analiza el arbol abstracto de sintaxis
   *
-  * \param vm: Referencia a un objeto tipo máquina virtual
+  * \param vm: Referencia a un objeto tipo maquina virtual
   * \param tree: Arbol abstracto de sintaxis
   * \return lat_object: objeto generico
   *
   */
-lat_objeto *nodo_analizar_arbol(lat_vm *vm, ast *tree);
+lat_objeto *nodo_analizar_arbol(lat_mv *mv, ast *tree);
 
 /** Analiza un nodo del arbol abstracto de sintaxis
   *
-  * \param vm: Referencia a un objeto tipo máquina virtual
+  * \param vm: Referencia a un objeto tipo maquina virtual
   * \param node: Nodo AST
   * \param bcode: Referencia a un objeto tipo bytecode
   * \param i: numero de instruccion actual
   * \return int: numero de instruccion siguiente
   *
   */
-int nodo_analizar(lat_vm *vm, ast *node, lat_bytecode *bcode, int i);
+int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i);
 
 #endif /*_AST_H_*/

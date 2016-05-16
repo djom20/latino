@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "libio.h"
 #include "vm.h"
 
-void lat_leer(lat_vm *vm)
+void lat_leer(lat_mv *mv)
 {
     char str[254];
     fgets(str, 254, stdin);
@@ -41,16 +41,16 @@ void lat_leer(lat_vm *vm)
     ret =strtod(str, &ptr);
     if(strcmp(ptr, "") == 0)
     {
-        vm->registros[255] = lat_decimal_nuevo(vm, ret);
+        mv->registros[255] = lat_decimal_nuevo(mv, ret);
     }
     else
     {
-        vm->registros[255] = lat_cadena_nueva(vm, parse_string(str, strlen(str)));
+        mv->registros[255] = lat_cadena_nueva(mv, parse_string(str, strlen(str)));
     }
 }
-void lat_leer_archivo(lat_vm *vm)
+void lat_leer_archivo(lat_mv *mv)
 {
-    lat_objeto* o = lat_desapilar(vm);
+    lat_objeto* o = lat_desapilar(mv);
 
     if(o->type == T_STR || o->type == T_LIT)
     {
@@ -71,7 +71,7 @@ void lat_leer_archivo(lat_vm *vm)
             printf("No se pudo asignar %d bytes de memoria\n", fsize);
         }
         buf[newSize] = '\0';
-        vm->registros[255] = lat_cadena_nueva(vm, buf);
+        mv->registros[255] = lat_cadena_nueva(mv, buf);
     }
     else
     {
@@ -79,10 +79,10 @@ void lat_leer_archivo(lat_vm *vm)
     }
 }
 
-void lat_escribir_archivo(lat_vm *vm)
+void lat_escribir_archivo(lat_mv *mv)
 {
-    lat_objeto* s = lat_desapilar(vm);
-    lat_objeto* o = lat_desapilar(vm);
+    lat_objeto* s = lat_desapilar(mv);
+    lat_objeto* o = lat_desapilar(mv);
     if(o->type == T_STR || o->type == T_LIT)
     {
         FILE* fp;

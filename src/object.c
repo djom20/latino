@@ -87,7 +87,7 @@ int lat_contexto_contiene(lat_objeto* ns, lat_objeto* name)
     return 0;
 }
 
-lat_objeto* lat_crear_objeto(lat_vm* vm)
+lat_objeto* lat_crear_objeto(lat_mv *mv)
 {
     lat_objeto* ret = (lat_objeto*)lat_asignar_memoria(sizeof(lat_objeto));
     ret->type = T_NULO;
@@ -95,81 +95,81 @@ lat_objeto* lat_crear_objeto(lat_vm* vm)
     return ret;
 }
 
-lat_objeto* lat_instancia(lat_vm* vm)
+lat_objeto* lat_instancia(lat_mv *mv)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_INSTANCE;
     ret->data_size = sizeof(hash_map*);
     ret->data.nombre = make_hash_map();
     return ret;
 }
 
-lat_objeto* lat_literal_nuevo(lat_vm* vm, const char* p)
+lat_objeto* lat_literal_nuevo(lat_mv *mv, const char* p)
 {
     lat_objeto* ret = lat_cadena_hash(p, strlen(p));
     return ret;
 }
 
-lat_objeto* lat_entero_nuevo(lat_vm* vm, long val)
+lat_objeto* lat_entero_nuevo(lat_mv *mv, long val)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_INT;
     ret->data_size = sizeof(long);
     ret->data.i = val;
     return ret;
 }
 
-lat_objeto* lat_decimal_nuevo(lat_vm* vm, double val)
+lat_objeto* lat_decimal_nuevo(lat_mv *mv, double val)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_DOUBLE;
     ret->data_size = sizeof(double);
     ret->data.d = val;
     return ret;
 }
 
-lat_objeto* lat_logico_nuevo(lat_vm* vm, bool val)
+lat_objeto* lat_logico_nuevo(lat_mv *mv, bool val)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_BOOL;
     ret->data_size = sizeof(bool);
     ret->data.b = val;
     return ret;
 }
 
-lat_objeto* lat_cadena_nueva(lat_vm* vm, const char* p)
+lat_objeto* lat_cadena_nueva(lat_mv *mv, const char* p)
 {
     lat_objeto* ret = lat_cadena_hash(p, strlen(p));
     return ret;
 }
 
-lat_objeto* lat_lista_nueva(lat_vm* vm, list_node* l)
+lat_objeto* lat_lista_nueva(lat_mv *mv, list_node* l)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_LIST;
     ret->data_size = sizeof(list_node*);
     ret->data.lista = l;
     return ret;
 }
 
-lat_objeto* lat_funcion_nueva(lat_vm* vm)
+lat_objeto* lat_funcion_nueva(lat_mv *mv)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_FUNC;
     ret->data_size = 0;
     return ret; //We don't do anything here: all bytecode will be added later
 }
 
-lat_objeto* lat_cfuncion_nueva(lat_vm* vm)
+lat_objeto* lat_cfuncion_nueva(lat_mv *mv)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_CFUNC;
     return ret;
 }
 
-lat_objeto* lat_estructura_nueva(lat_vm* vm, void* val)
+lat_objeto* lat_estructura_nueva(lat_mv *mv, void* val)
 {
-    lat_objeto* ret = lat_crear_objeto(vm);
+    lat_objeto* ret = lat_crear_objeto(mv);
     ret->type = T_STRUCT;
     ret->data.cstruct = val;
     return ret;
@@ -232,7 +232,7 @@ void lat_marcar_hash(hash_map* h, unsigned char m)
     }
 }
 
-void lat_eliminar_objeto(lat_vm* vm, lat_objeto* o)
+void lat_eliminar_objeto(lat_mv *mv, lat_objeto* o)
 {
     switch (o->type)
     {
@@ -243,10 +243,10 @@ void lat_eliminar_objeto(lat_vm* vm, lat_objeto* o)
         return;
         break;
     case T_LIST:
-        //lat_eliminar_lista(vm, o->data.lista);
+        //lat_eliminar_lista(mv, o->data.lista);
         break;
     case T_DICT:
-        //lat_eliminar_lista(vm, o->data.lista);
+        //lat_eliminar_lista(mv, o->data.lista);
         break;
     case T_LIT:
     case T_INT:
@@ -266,7 +266,7 @@ void lat_eliminar_objeto(lat_vm* vm, lat_objeto* o)
     lat_liberar_memoria(o);
 }
 
-void lat_eliminar_lista(lat_vm* vm, list_node* l)
+void lat_eliminar_lista(lat_mv *mv, list_node* l)
 {
     if (l != NULL)
     {
@@ -275,7 +275,7 @@ void lat_eliminar_lista(lat_vm* vm, list_node* l)
         {
             if (c->data != NULL)
             {
-                lat_eliminar_objeto(vm, (lat_objeto*)c->data);
+                lat_eliminar_objeto(mv, (lat_objeto*)c->data);
             }
             lat_liberar_memoria(c);
         }
@@ -283,7 +283,7 @@ void lat_eliminar_lista(lat_vm* vm, list_node* l)
     lat_liberar_memoria(l);
 }
 
-void lat_eliminar_hash(lat_vm* vm, hash_map* h)
+void lat_eliminar_hash(lat_mv *mv, hash_map* h)
 {
     int c = 0;
     list_node* l;
@@ -301,7 +301,7 @@ void lat_eliminar_hash(lat_vm* vm, hash_map* h)
                     if (cur->data != NULL)
                     {
                         hv = (hash_val*)cur->data;
-                        lat_eliminar_objeto(vm, (lat_objeto*)hv->val);
+                        lat_eliminar_objeto(mv, (lat_objeto*)hv->val);
                         lat_liberar_memoria(hv);
                     }
                     //lat_liberar_memoria(cur);
@@ -312,28 +312,28 @@ void lat_eliminar_hash(lat_vm* vm, hash_map* h)
     }
 }
 
-lat_objeto* lat_clonar_objeto(lat_vm* vm, lat_objeto* obj)
+lat_objeto* lat_clonar_objeto(lat_mv *mv, lat_objeto* obj)
 {
     lat_objeto* ret;
     switch (obj->type)
     {
     case T_INSTANCE:
-        ret = lat_crear_objeto(vm);
+        ret = lat_crear_objeto(mv);
         ret->type = T_INSTANCE;
         ret->data_size = sizeof(hash_map*);
-        ret->data.nombre = lat_clonar_hash(vm, obj->data.nombre);
+        ret->data.nombre = lat_clonar_hash(mv, obj->data.nombre);
         //ret->data.nombre = obj->data.nombre;
         break;
     case T_LIST:
-        ret = lat_lista_nueva(vm, lat_clonar_lista(vm, obj->data.lista));
-        //ret = lat_lista_nueva(vm, obj->data.lista);
+        ret = lat_lista_nueva(mv, lat_clonar_lista(mv, obj->data.lista));
+        //ret = lat_lista_nueva(mv, obj->data.lista);
         break;
     case T_FUNC:
     case T_CFUNC:
         ret = obj;
         break;
     default:
-        ret = lat_crear_objeto(vm);
+        ret = lat_crear_objeto(mv);
         ret->type = obj->type;
         ret->marked = obj->marked;
         ret->data_size = obj->data_size;
@@ -343,7 +343,7 @@ lat_objeto* lat_clonar_objeto(lat_vm* vm, lat_objeto* obj)
     return ret;
 }
 
-list_node* lat_clonar_lista(lat_vm* vm, list_node* l)
+list_node* lat_clonar_lista(lat_mv *mv, list_node* l)
 {
     list_node* ret = lat_crear_lista();
     if (l != NULL)
@@ -353,14 +353,14 @@ list_node* lat_clonar_lista(lat_vm* vm, list_node* l)
         {
             if (c->data != NULL)
             {
-                insert_list(ret, lat_clonar_objeto(vm, (lat_objeto*)c->data));
+                insert_list(ret, lat_clonar_objeto(mv, (lat_objeto*)c->data));
             }
         }
     }
     return ret;
 }
 
-hash_map* lat_clonar_hash(lat_vm* vm, hash_map* h)
+hash_map* lat_clonar_hash(lat_mv *mv, hash_map* h)
 {
     int c = 0;
     hash_map* ret = make_hash_map();
@@ -379,9 +379,9 @@ hash_map* lat_clonar_hash(lat_vm* vm, hash_map* h)
                     if (cur->data != NULL)
                     {
                         hash_val* hv = (hash_val*)lat_asignar_memoria(sizeof(hash_val));
-                        //vm->memoria_usada += sizeof(hash_val);
+                        //mv->memoria_usada += sizeof(hash_val);
                         strncpy(hv->key, ((hash_val*)cur->data)->key, 256);
-                        hv->val = lat_clonar_objeto(vm, (lat_objeto*)((hash_val*)cur->data)->val);
+                        hv->val = lat_clonar_objeto(mv, (lat_objeto*)((hash_val*)cur->data)->val);
                         insert_list(ret->buckets[c], hv);
                     }
                 }

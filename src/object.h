@@ -74,9 +74,11 @@ typedef union lat_datos_objeto
     list_node* lista;  /**< valor de la lista */
     hash_map* dict;  /**< valor del diccionario */
     void* func;  /**< valor funcion */
-    void (*cfunc)(lat_vm*);  /**< valor funcion C */
+    void (*cfunc)(lat_mv*);  /**< valor funcion C */
     void* cstruct;  /**< valor estructura */
 } lat_datos_objeto;
+
+#define lat_objeto_CABEZA lat_objeto obj_base;
 
 /** \brief Objeto
 *
@@ -95,6 +97,8 @@ struct lat_objeto
 struct lat_llave_valor
 {
     lat_type type;
+    lat_objeto* llave;
+    lat_objeto* valor;
 };
 
 /** \brief Asigna el objeto a un contexto (local / publico)
@@ -124,14 +128,14 @@ int  lat_contexto_contiene(lat_objeto* ns, lat_objeto* name);
   * \param vm: Intancia de la maquina virtual
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_crear_objeto(lat_vm* vm);
+lat_objeto* lat_crear_objeto(lat_mv *mv);
 
 /** \brief Crea un contexto determinado
   *
   * \param vm: Intancia de la maquina virtual
   * \return lat_objeto: Apuntador al contexto creado
   */
-lat_objeto* lat_instancia(lat_vm* vm);
+lat_objeto* lat_instancia(lat_mv *mv);
 
 /** \brief Crea un objeto literal
   *
@@ -139,7 +143,7 @@ lat_objeto* lat_instancia(lat_vm* vm);
   * \param val: Apuntador a la cadena de caracteres
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_literal_nuevo(lat_vm* vm, const char* val);
+lat_objeto* lat_literal_nuevo(lat_mv *mv, const char* val);
 
 /** \brief Crea un objeto entero
   *
@@ -147,7 +151,7 @@ lat_objeto* lat_literal_nuevo(lat_vm* vm, const char* val);
   * \param val: valor entero
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_entero_nuevo(lat_vm* vm, long val);
+lat_objeto* lat_entero_nuevo(lat_mv *mv, long val);
 
 /** \brief Crea un objeto decimal
   *
@@ -155,7 +159,7 @@ lat_objeto* lat_entero_nuevo(lat_vm* vm, long val);
   * \param val: valor decimal
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_decimal_nuevo(lat_vm* vm, double val);
+lat_objeto* lat_decimal_nuevo(lat_mv *mv, double val);
 
 /** \brief Crea un objeto cadena
   *
@@ -163,7 +167,7 @@ lat_objeto* lat_decimal_nuevo(lat_vm* vm, double val);
   * \param val: valor cadena
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_cadena_nueva(lat_vm* vm, const char* val);
+lat_objeto* lat_cadena_nueva(lat_mv *mv, const char* val);
 
 /** \brief Crea un objeto logico
   *
@@ -171,7 +175,7 @@ lat_objeto* lat_cadena_nueva(lat_vm* vm, const char* val);
   * \param val: valor logico
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_logico_nuevo(lat_vm* vm, bool val);
+lat_objeto* lat_logico_nuevo(lat_mv *mv, bool val);
 
 /** \brief Crea un objeto lista
   *
@@ -179,21 +183,21 @@ lat_objeto* lat_logico_nuevo(lat_vm* vm, bool val);
   * \param l: Apuntador a un nodo de la lista
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_lista_nueva(lat_vm* vm, list_node* l);
+lat_objeto* lat_lista_nueva(lat_mv *mv, list_node* l);
 
 /** \brief Crea un objeto funcion
   *
   * \param vm: Intancia de la maquina virtual
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_funcion_nueva(lat_vm* vm);
+lat_objeto* lat_funcion_nueva(lat_mv *mv);
 
 /** \brief Crea un objeto funcion C
   *
   * \param vm: Intancia de la maquina virtual
   * \return lat_objeto: Apuntador al objeto creado
   */
-lat_objeto* lat_cfuncion_nueva(lat_vm* vm);
+lat_objeto* lat_cfuncion_nueva(lat_mv *mv);
 
 /** \brief Marca un objeto para el colector de basura
   *
@@ -221,42 +225,42 @@ void lat_marcar_hash(hash_map* l, unsigned char m);
   * \param vm: Intancia de la maquina virtual
   * \param o: Apuntador al objeto
   */
-void lat_eliminar_objeto(lat_vm* vm, lat_objeto* o);
+void lat_eliminar_objeto(lat_mv *mv, lat_objeto* o);
 
 /** \brief Elimina un objeto lista de la lista de objetos creados dinamicamente
   *
   * \param vm: Intancia de la maquina virtual
   * \param l: Apuntador al nodo de la lista
   */
-void lat_eliminar_lista(lat_vm* vm, list_node* l);
+void lat_eliminar_lista(lat_mv *mv, list_node* l);
 
 /** \brief Elimina una tabla hash de la lista de objetos creados dinamicamente
   *
   * \param vm: Intancia de la maquina virtual
   * \param l: Apuntador al nodo de la tabla hash
   */
-void lat_eliminar_hash(lat_vm* vm, hash_map* l);
+void lat_eliminar_hash(lat_mv *mv, hash_map* l);
 
 /** \brief Clona (copia) un objeto
   *
   * \param vm: Intancia de la maquina virtual
   * \param o: Apuntador al objeto
   */
-lat_objeto* lat_clonar_objeto(lat_vm* vm, lat_objeto* o);
+lat_objeto* lat_clonar_objeto(lat_mv *mv, lat_objeto* o);
 
 /** \brief Clona (copia) una lista
   *
   * \param vm: Intancia de la maquina virtual
   * \param l: Apuntador al nodo de la lista
   */
-list_node* lat_clonar_lista(lat_vm* vm, list_node* l);
+list_node* lat_clonar_lista(lat_mv *mv, list_node* l);
 
 /** \brief Clona (copia) una tabla hash
   *
   * \param vm: Intancia de la maquina virtual
   * \param l: Apuntador al nodo de la tabla hash
   */
-hash_map* lat_clonar_hash(lat_vm* vm, hash_map* l);
+hash_map* lat_clonar_hash(lat_mv *mv, hash_map* l);
 
 /** \brief Obtiene el valor de la literal de un objeto
   *
