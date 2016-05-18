@@ -291,11 +291,13 @@ static void lat_repl(lat_mv *mv)
         {
             lat_objeto *curexpr = nodo_analizar_arbol(mv, tmp);
             lat_llamar_funcion(mv, curexpr);
+            /*
             lat_objeto* resultado = lat_desapilar(mv);
             if(resultado != NULL && (strstr(buf, "escribir") == NULL && strstr(buf, "imprimir") == NULL)){
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
             }
+            */
             linenoiseHistoryAdd(replace(buf, "\n", ""));
             linenoiseHistorySave("history.txt");
         }

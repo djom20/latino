@@ -364,6 +364,8 @@ lat_objeto *nodo_analizar_arbol(lat_mv *mv, ast *tree)
 }
 
 int nested = -1;
+int num_params = 0;
+int num_args = 0;
 
 int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
 {
@@ -375,7 +377,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
     case NODO_INCLUIR:
     {
         //TODO: Incluir rutas con punto ej. incluir "lib.modulos.myModulo"
-        char* archivo = node->l->valor->v.s;
+        /*char* archivo = node->l->valor->v.s;
         lat_objeto* mod = lat_cadena_nueva(mv, archivo);
         if(!find_list(mv->modulos, (void*)mod))
         {
@@ -414,6 +416,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             }
         }
         //return NULL;
+        */
     }
     break;
     case NODO_BLOQUE:
@@ -472,7 +475,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         printf("POP R255 R0\n");
         printf("SET R255 R1\n");
         */
-        printf("STORESTR %s\n", ret->data.str);
+        printf("STORE_NAME %s\n", ret->data.str);
 #endif
     }
     break;
@@ -501,7 +504,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         dbc(LOAD_CONST, 0, 0, ret);
 #if DEPURAR_MV
         //printf("STORECHAR R255 %s\n", ret->data.str);
-        printf("LOAD_CONST %s\n", ret->data.str);
+        printf("LOAD_CONST %s\n", ret->data.c);
 #endif
     }
     break;
@@ -625,16 +628,18 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
     case NODO_FUNCION_LLAMADA:
     {
         //procesa los argumentos
+        num_args = 0;
         if (node->r)
         {
             pn(mv, node->r);
         }
         //procesa el identificador de la funcion ej. escribir
         pn(mv, node->l);
-        dbc(CALL_FUNCTION, 0, 0, NULL);
+        dbc(CALL_FUNCTION, num_args, 0, NULL);
 #if DEPURAR_MV
-        printf("CALL_FUNCTION\n");
+        printf("CALL_FUNCTION %i\n", num_args);
 #endif
+        num_args = 0;
     }
     break;
     case NODO_RETORNO:
@@ -642,7 +647,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         pn(mv, node->l);
         dbc(RETURN_VALUE, 0, 0, NULL);
 #if DEPURAR_MV
-        printf("END R255\n");
+        printf("RETURN_VALUE\n");
 #endif
     }
     break;
@@ -651,6 +656,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         if (node->l)
         {
             pn(mv, node->l);
+            num_args++;
             //dbc(OP_PUSH, 255, 0, NULL);
 #if DEPURAR_MV
             //printf("PUSH R255\n");
@@ -680,6 +686,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             //dbc(OP_SET, 2, 1, ret);
             lat_objeto *ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->l->valor->v.s));
             dbc(STORE_NAME, 0, 0, ret);
+            num_params++;
             pn(mv, node->l);
 #if DEPURAR_MV
             //printf("LOCALNS R1\n");
@@ -699,17 +706,21 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         funcion_bcode =
             (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
         fi = 0;
+        num_params = 0;
+        //parametros de la funcion
         if (node->l)
         {
             fpn(mv, node->l);
         }
+        //nombre de la funcion
         fpn(mv, node->r);
-        dbc(MAKE_FUNCTION, 255, 0, funcion_bcode);
+        dbc(MAKE_FUNCTION, num_params, 0, funcion_bcode);
 #if DEPURAR_MV
-        //printf("FN R255\n");
+        printf("MAKE_FUNCTION %i\n", num_params);
 #endif
         funcion_bcode = NULL;
         fi = 0;
+        num_params = 0;
     }
     break;
     case NODO_LISTA:

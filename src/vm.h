@@ -37,7 +37,7 @@ typedef struct lat_mv lat_mv;
 #include "object.h"
 
 /**\brief Bandera para debuguear las instrucciones de la maquina virtual */
-#define DEPURAR_MV 0
+#define DEPURAR_MV 1
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
@@ -95,7 +95,7 @@ typedef struct lat_bytecode
 /**\brief Define una funcion de usuario */
 typedef struct lat_function
 {
-    int num_args;           /**< Numero de argumentos para la funcion **/
+    int num_params;           /**< Numero de argumentos para la funcion **/
     lat_bytecode* bcode;    /**< Instrucciones de la funcion */
     //lat_objeto *closure;
 } lat_function;
@@ -214,7 +214,7 @@ void lat_basurero(lat_mv *mv);
   *\param inslist: Lista de instrucciones de la funcion
   *\return lat_objeto: Apuntador a un objeto tipo funcion
   */
-lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_args);
+lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_params);
 
 /**\brief Define una funcion creada en C
   *

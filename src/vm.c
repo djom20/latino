@@ -276,11 +276,12 @@ void lat_basurero(lat_mv *mv)
     }
 }
 
-lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_args)
+lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_params)
 {
     lat_objeto* ret = lat_funcion_nueva(mv);
     lat_function* fval = (lat_function*)lat_asignar_memoria(sizeof(lat_function));
     fval->bcode = inslist;
+    fval->num_params = num_params;
     ret->data.func = fval;
     //mv->memoria_usada += sizeof(sizeof(lat_function));
     return ret;
@@ -371,7 +372,7 @@ static void lat_imprimir_elem(lat_mv *mv)
     {
         fprintf(stdout, "Tipo desconocido %d\n", in->type);
     }
-    mv->registros[255] = in;
+    lat_apilar(mv, in);
 }
 
 void lat_imprimir(lat_mv *mv)
@@ -433,7 +434,7 @@ void lat_imprimir(lat_mv *mv)
     {
         fprintf(stdout, "Tipo desconocido %d\n", in->type);
     }
-    mv->registros[255] = in;
+    lat_apilar(mv, in);
 }
 
 void lat_imprimir_lista(lat_mv *mv, list_node* l)
@@ -581,11 +582,11 @@ void lat_sumar(lat_mv *mv)
     }
     if (a->type == T_DOUBLE || b->type == T_DOUBLE)
     {
-        mv->registros[255] = lat_decimal_nuevo(mv, lat_obtener_decimal(a) + lat_obtener_decimal(b));
+        lat_apilar(mv, lat_decimal_nuevo(mv, lat_obtener_decimal(a) + lat_obtener_decimal(b)));
     }
     else
     {
-        mv->registros[255] = lat_entero_nuevo(mv, lat_obtener_entero(a) + lat_obtener_entero(b));
+        lat_apilar(mv, lat_entero_nuevo(mv, lat_obtener_entero(a) + lat_obtener_entero(b)));
     }
 }
 
@@ -1034,12 +1035,16 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             /* redefinicion de instrucciones */
             case LOAD_CONST:
                 lat_apilar(mv, (lat_objeto*)cur.meta);
+                //lat_imprimir_lista(mv, mv->pila);
+                //printf("\n");
                 break;
             case STORE_NAME:{
                     lat_objeto *contexto = lat_obtener_contexto(mv);
                     lat_objeto *variable = (lat_objeto*)cur.meta;
                     lat_objeto *valor = lat_desapilar(mv);
                     lat_asignar_contexto_objeto(contexto, variable, valor);
+                    //lat_imprimir_lista(mv, mv->pila);
+                    //printf("\n");
                 }
                 break;
             case LOAD_NAME: {
@@ -1047,21 +1052,58 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     lat_objeto *variable = (lat_objeto*)cur.meta;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
+                    //lat_imprimir_lista(mv, mv->pila);
+                    //printf("\n");
                 }
                 break;
             case CALL_FUNCTION:
                 {
+                    printf("\nantes de llamar funcion\n");
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");
                     lat_objeto* funcion = lat_desapilar(mv);
                     if(funcion != NULL)
                     {
-                        lat_llamar_funcion(mv, funcion);
-                        //desapilar argumentos
+                        if(func->type == T_FUNC){
+                            lat_llamar_funcion(mv, funcion);
+                            printf("\ndespues de llamar funcion\n");
+                            lat_imprimir_lista(mv, mv->pila);
+                            printf("\n");
+                            //desapilar resultado
+                            lat_objeto* res = lat_desapilar(mv);
+                            //desapilar argumentos
+                            int i;
+                            for(i=0; i < cur.a; i++){
+                                lat_desapilar(mv);
+                            }
+                            //apilar resultado
+                            lat_apilar(mv, res);
+                            printf("\ndespues de desapilar argumentos\n");
+                            lat_imprimir_lista(mv, mv->pila);
+                            printf("\n");
+                        }else{
+                            lat_llamar_funcion(mv, funcion);
+                        }
                     }
                 }
                 break;
             case MAKE_FUNCTION: {
-                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.meta, 0);
+                    printf("\nantes de crear funcion\n");
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");
+                    //lat_objeto* nombre_fun = lat_desapilar(mv);
+                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.meta, cur.a);
                     lat_apilar(mv, funcion_usuario);
+                    //lat_objeto *contexto = lat_obtener_contexto(mv);
+                    //lat_asignar_contexto_objeto(contexto, nombre_fun, funcion_usuario);
+                    //desapilar parametros
+                    //int i;
+                    //for(i=0; i < cur.a; i++){
+                    //    lat_desapilar(mv);
+                    //}
+                    printf("\ndespues de crear funcion\n");
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");
                 }
                 break;
             case RETURN_VALUE:
@@ -1078,7 +1120,19 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
     }
     else if (func->type == T_CFUNC)
     {
+        //desapilar funcion
+        //lat_objeto* cfun = lat_desapilar(mv);
+        //printf("\nllamando a funcion: %s\n", cfun->data.str);
         ((void (*)(lat_mv*))(func->data.func))(mv);
+        //lat_objeto* res = lat_desapilar(mv);
+        //lat_imprimir_lista(mv, mv->pila);
+        //desapilar argumentos
+        //int i;
+        //for(i=0; i < 2; i++){
+        //    lat_desapilar(mv);
+        //}
+        //apilar resultado
+        //lat_apilar(mv, res);
     }
     else
     {
