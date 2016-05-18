@@ -40,7 +40,12 @@ ast *nodo_nuevo_operador(nodo_tipo nt, ast *l, ast *r)
     {
     case NODO_SUMA:
     {
-        a->l = nodo_nuevo_identificador("+", 1, 1);
+        //a->l = nodo_nuevo_identificador("+", 1, 1);
+        a->tipo = NODO_SUMA;
+        a->l = l;
+        a->r = r;
+        a->valor = NULL;
+        return a;
     }
     break;
     case NODO_MENOS_UNARIO:
@@ -665,6 +670,9 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         if (node->r)
         {
             pn(mv, node->r);
+            if(node->r->valor){
+                num_args++;
+            }
             //Soporte para recursion NODO_FUNCION_LLAMADA
             //if (node->r->valor || node->r->tipo == NODO_FUNCION_LLAMADA)
             //{
@@ -678,25 +686,32 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
     break;
     case NODO_LISTA_PARAMETROS:
     {
+        //lat_objeto* ret = NULL;
         if (node->l)
         {
             //dbc(OP_LOCALNS, 1, 0, NULL);
             //dbc(OP_POP, 2, 0, NULL);
             //lat_objeto *ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->l->valor->v.s));
             //dbc(OP_SET, 2, 1, ret);
-            lat_objeto *ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->l->valor->v.s));
-            dbc(STORE_NAME, 0, 0, ret);
-            num_params++;
+            /*if(node->l->valor){
+                ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->l->valor->v.s));
+                dbc(STORE_NAME, 0, 0, ret);
+            }*/
             pn(mv, node->l);
+            num_params++;
 #if DEPURAR_MV
             //printf("LOCALNS R1\n");
             //printf("POP R2\n");
             //printf("SET R2 R1 %s\n", ret->data.str);
-            printf("STORE_NAME %s\n", ret->data.str);
+            //printf("STORE_NAME %s\n", ret->data.str);
 #endif
         }
         if (node->r)
         {
+            /*if(node->r->valor){
+                ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->r->valor->v.s));
+                dbc(STORE_NAME, 0, 0, ret);
+            }*/
             pn(mv, node->r);
         }
     }
@@ -708,11 +723,13 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         fi = 0;
         num_params = 0;
         //parametros de la funcion
+        printf("inicio PARAMETROS\n");
         if (node->l)
         {
             fpn(mv, node->l);
         }
-        //nombre de la funcion
+        printf("inicio INSTRUCCIONES\n");
+        //instrucciones de la funcion
         fpn(mv, node->r);
         dbc(MAKE_FUNCTION, num_params, 0, funcion_bcode);
 #if DEPURAR_MV
@@ -721,8 +738,23 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         funcion_bcode = NULL;
         fi = 0;
         num_params = 0;
+        printf("fin NODO_FUNCION_USUARIO\n");
     }
     break;
+    case NODO_SUMA:
+        {
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(BINARY_ADD, 0, 0, NULL);
+#if DEPURAR_MV
+        printf("BINARY_ADD\n");
+#endif
+
+        }break;
     case NODO_LISTA:
     {
         nested++;

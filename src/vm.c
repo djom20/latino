@@ -46,7 +46,7 @@ lat_mv* lat_crear_maquina_virtual()
     memset(ret->contexto_pila, 0, 256);
     ret->contexto_pila[0] = lat_instancia(ret);
     ret->apuntador_pila = 0;
-    lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "+"), lat_definir_cfuncion(ret, lat_sumar));
+    //lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "+"), lat_definir_cfuncion(ret, lat_sumar));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "-"), lat_definir_cfuncion(ret, lat_restar));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "*"), lat_definir_cfuncion(ret, lat_multiplicar));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "/"), lat_definir_cfuncion(ret, lat_dividir));
@@ -372,7 +372,6 @@ static void lat_imprimir_elem(lat_mv *mv)
     {
         fprintf(stdout, "Tipo desconocido %d\n", in->type);
     }
-    lat_apilar(mv, in);
 }
 
 void lat_imprimir(lat_mv *mv)
@@ -434,7 +433,7 @@ void lat_imprimir(lat_mv *mv)
     {
         fprintf(stdout, "Tipo desconocido %d\n", in->type);
     }
-    lat_apilar(mv, in);
+    //lat_apilar(mv, in);
 }
 
 void lat_imprimir_lista(lat_mv *mv, list_node* l)
@@ -908,7 +907,7 @@ lat_objeto* lista_obtener_elemento(list_node* l, int pos)
     return NULL;
 }
 
-void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
+lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
 {
     if (func->type == T_FUNC)
     {
@@ -1035,16 +1034,18 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             /* redefinicion de instrucciones */
             case LOAD_CONST:
                 lat_apilar(mv, (lat_objeto*)cur.meta);
-                //lat_imprimir_lista(mv, mv->pila);
-                //printf("\n");
+                printf("\nLOAD_CONST %ld\n", lat_obtener_entero((lat_objeto*)cur.meta));
+                lat_imprimir_lista(mv, mv->pila);
+                printf("\n");
                 break;
             case STORE_NAME:{
                     lat_objeto *contexto = lat_obtener_contexto(mv);
                     lat_objeto *variable = (lat_objeto*)cur.meta;
                     lat_objeto *valor = lat_desapilar(mv);
                     lat_asignar_contexto_objeto(contexto, variable, valor);
-                    //lat_imprimir_lista(mv, mv->pila);
-                    //printf("\n");
+                    printf("\nSTORE_NAME %s\n", lat_obtener_cadena(variable));
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");
                 }
                 break;
             case LOAD_NAME: {
@@ -1052,37 +1053,43 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     lat_objeto *variable = (lat_objeto*)cur.meta;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
-                    //lat_imprimir_lista(mv, mv->pila);
-                    //printf("\n");
+                    printf("\nLOAD_NAME %s\n", lat_obtener_cadena(variable));
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");
                 }
                 break;
             case CALL_FUNCTION:
                 {
-                    printf("\nantes de llamar funcion\n");
+                    printf("\nantes de llamar Cfuncion\n");
                     lat_imprimir_lista(mv, mv->pila);
                     printf("\n");
                     lat_objeto* funcion = lat_desapilar(mv);
                     if(funcion != NULL)
                     {
-                        if(func->type == T_FUNC){
-                            lat_llamar_funcion(mv, funcion);
+                        if(funcion->type == T_FUNC){
+                            lat_objeto* res = lat_llamar_funcion(mv, funcion);
                             printf("\ndespues de llamar funcion\n");
                             lat_imprimir_lista(mv, mv->pila);
                             printf("\n");
                             //desapilar resultado
-                            lat_objeto* res = lat_desapilar(mv);
+                            //lat_objeto* res = lat_desapilar(mv);
                             //desapilar argumentos
                             int i;
                             for(i=0; i < cur.a; i++){
                                 lat_desapilar(mv);
                             }
                             //apilar resultado
-                            lat_apilar(mv, res);
+                            //lat_apilar(mv, res);
                             printf("\ndespues de desapilar argumentos\n");
                             lat_imprimir_lista(mv, mv->pila);
                             printf("\n");
                         }else{
-                            lat_llamar_funcion(mv, funcion);
+                            lat_desapilar(mv);
+                            lat_desapilar(mv);
+                            lat_objeto* res = lat_llamar_funcion(mv, funcion);
+                             printf("\ndespues de llamar Cfuncion\n");
+                            lat_imprimir_lista(mv, mv->pila);
+                            printf("\n");
                         }
                     }
                 }
@@ -1091,26 +1098,29 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     printf("\nantes de crear funcion\n");
                     lat_imprimir_lista(mv, mv->pila);
                     printf("\n");
-                    //lat_objeto* nombre_fun = lat_desapilar(mv);
                     lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.meta, cur.a);
-                    lat_apilar(mv, funcion_usuario);
-                    //lat_objeto *contexto = lat_obtener_contexto(mv);
-                    //lat_asignar_contexto_objeto(contexto, nombre_fun, funcion_usuario);
                     //desapilar parametros
                     //int i;
                     //for(i=0; i < cur.a; i++){
                     //    lat_desapilar(mv);
                     //}
+                    lat_apilar(mv, funcion_usuario);
                     printf("\ndespues de crear funcion\n");
                     lat_imprimir_lista(mv, mv->pila);
                     printf("\n");
                 }
                 break;
             case RETURN_VALUE:
-                return;
+                {
+                    lat_objeto* res = lat_desapilar(mv);
+                    return res;
+                }
                 break;
 
-
+            case BINARY_ADD:
+                {
+                    lat_sumar(mv);
+                }
             }   //end switch
         }   //end for
         if(!mv->REPL)
@@ -1125,6 +1135,7 @@ void lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         //printf("\nllamando a funcion: %s\n", cfun->data.str);
         ((void (*)(lat_mv*))(func->data.func))(mv);
         //lat_objeto* res = lat_desapilar(mv);
+        //return res;
         //lat_imprimir_lista(mv, mv->pila);
         //desapilar argumentos
         //int i;

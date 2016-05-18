@@ -42,7 +42,6 @@ typedef struct lat_mv lat_mv;
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
 {
-    RETURN_VALUE,    /**< Fin de la maquina virtual */
     OP_NOP,    /**< Indica No operacion */
     OP_PUSH,    /**< Inserta en la pila */
     OP_POP,    /**< Extrae de la pila */
@@ -80,6 +79,8 @@ typedef enum lat_ins
     LOAD_NAME,
     CALL_FUNCTION,    /**< Llamada a una funcion */
     MAKE_FUNCTION,    /**< Define una funcion */
+    RETURN_VALUE,    /**< Fin de la maquina virtual */
+    BINARY_ADD  /**< Suma binaria */
 } lat_ins;
 
 
@@ -433,6 +434,6 @@ lat_bytecode lat_bc(lat_ins i, int a, int b, void* meta);
   *\param vm: Apuntador a la MV
   *\param func: Apuntador a funcion a ejecutar
   */
-void lat_llamar_funcion(lat_mv *mv, lat_objeto* func);
+lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func);
 
 #endif //_VM_H_

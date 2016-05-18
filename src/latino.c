@@ -279,10 +279,8 @@ static void lat_repl(lat_mv *mv)
     ast* tmp = NULL;
     int status;
     mv->REPL = true;
-    //linenoiseSetMultiLine(1);
     linenoiseHistoryLoad("history.txt");
     linenoiseSetCompletionCallback(completion);
-    //linenoiseSetHintsCallback(hints);
     while (leer_linea(mv, buf) != -1)
     {
         parse_silent = 0;
@@ -358,9 +356,9 @@ int main(int argc, char *argv[])
     else
     {
 #ifdef _WIN32
-        system("cmd");
-        //lat_version();
-        //lat_repl(mv);
+        //system("cmd");
+        lat_version();
+        lat_repl(mv);
 #else
         lat_version();
         lat_repl(mv);
