@@ -223,23 +223,11 @@ declaration:
     | unary_expression { $$ = $1; }
     ;
 
-/*labeled_statement:
-    KCASE constant_expression ':' statement_list {
-        $$ = nodo_nuevo(NODO_CASO, $2, $4);
-    }
-    | KDEFAULT ':' statement_list {
-        $$ = nodo_nuevo(NODO_DEFECTO, NULL, $3);
-    }
-    ;
-*/
-
 selection_statement:
     KIF expression statement_list KEND {
         $$ = nodo_nuevo_si($2, $3, NULL); }
     | KIF expression statement_list KELSE statement_list KEND {
         $$ = nodo_nuevo_si($2, $3, $5); }
-    /*| KSWITCH '(' TIDENTIFIER ')' labeled_statement KEND {
-        $$ = nodo_nuevo(NODO_SELECCION, $3, $5); }*/
     ;
 
 iteration_statement
@@ -340,7 +328,7 @@ list_get_item:
 //se define para analisis sintactico (bison)
 int yyerror(struct YYLTYPE *yylloc_param, void *scanner, struct ast **root,
             const char *s) {
-  if(!parse_silent){
+  if(!analisis_silencioso){
       lat_registrar_error("Linea %d: %s", (yylloc_param->first_line + 1), s);
   }
   return 0;

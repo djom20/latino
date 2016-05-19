@@ -52,7 +52,7 @@ void lat_leer_archivo(lat_mv *mv)
 {
     lat_objeto* o = lat_desapilar(mv);
 
-    if(o->type == T_STR || o->type == T_LIT)
+    if(o->tipo == T_STR || o->tipo == T_LIT)
     {
         FILE *fp;
         char *buf;
@@ -83,7 +83,7 @@ void lat_escribir_archivo(lat_mv *mv)
 {
     lat_objeto* s = lat_desapilar(mv);
     lat_objeto* o = lat_desapilar(mv);
-    if(o->type == T_STR || o->type == T_LIT)
+    if(o->tipo == T_STR || o->tipo == T_LIT)
     {
         FILE* fp;
         fp = fopen(lat_obtener_cadena(o), "w");

@@ -68,9 +68,9 @@ static khash_t(sym) * sym_table;
 static lat_objeto* str_new(const char* p, size_t len)
 {
     lat_objeto* str = (lat_objeto*)lat_asignar_memoria(sizeof(lat_objeto));
-    str->type = T_STR;
-    str->data_size = len;
-    str->data.str = (char *)p;
+    str->tipo = T_STR;
+    str->tamanio_datos = len;
+    str->datos.cadena = (char *)p;
     return str;
 }
 
@@ -92,7 +92,7 @@ static lat_objeto* str_intern(const char* p, size_t len)
         return kh_value(sym_table, k);
     }
     str = str_new(p, len);
-    kh_key(sym_table, k).ptr = str->data.str;
+    kh_key(sym_table, k).ptr = str->datos.cadena;
     kh_value(sym_table, k) = str;
     return str;
 }
@@ -119,35 +119,35 @@ void lat_concatenar(lat_mv *mv)
     lat_objeto* a = lat_desapilar(mv);
     lat_objeto* x = NULL;
     lat_objeto* y = NULL;
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
-        x = lat_cadena_nueva(mv, bool2str(a->data.b));
+        x = lat_cadena_nueva(mv, bool2str(a->datos.logico));
         break;
     case T_INT:
-        x = lat_cadena_nueva(mv, int2str(a->data.i));
+        x = lat_cadena_nueva(mv, int2str(a->datos.entero));
         break;
     case T_DOUBLE:
-        x = lat_cadena_nueva(mv, double2str(a->data.d));
+        x = lat_cadena_nueva(mv, double2str(a->datos.decimal));
         break;
     default:
-        x = lat_cadena_nueva(mv, a->data.str);
+        x = lat_cadena_nueva(mv, a->datos.cadena);
         break;
     }
 
-    switch (b->type)
+    switch (b->tipo)
     {
     case T_BOOL:
-        y = lat_cadena_nueva(mv, bool2str(b->data.b));
+        y = lat_cadena_nueva(mv, bool2str(b->datos.logico));
         break;
     case T_INT:
-        y = lat_cadena_nueva(mv, int2str(b->data.i));
+        y = lat_cadena_nueva(mv, int2str(b->datos.entero));
         break;
     case T_DOUBLE:
-        y = lat_cadena_nueva(mv, double2str(b->data.d));
+        y = lat_cadena_nueva(mv, double2str(b->datos.decimal));
         break;
     default:
-        y = lat_cadena_nueva(mv, b->data.str);
+        y = lat_cadena_nueva(mv, b->datos.cadena);
         break;
     }
     mv->registros[255] = lat_cadena_nueva(mv, concat(lat_obtener_cadena(x), lat_obtener_cadena(y)));

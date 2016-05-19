@@ -43,21 +43,22 @@ typedef struct lat_objeto lat_objeto;
 *
 * Tipo de dato que maneja la maquina virtual
 */
-typedef enum lat_type
+typedef enum lat_tipo_objeto
 {
-    T_NULO,    /**< nulo */
-    T_INSTANCE,    /**< instancia */
-    T_LIT,    /**< literal */
-    T_INT,    /**< entero */
-    T_DOUBLE,    /**< decimal */
-    T_STR,    /**< cadena */
-    T_BOOL,    /**< logico */
-    T_LIST,    /**< lista */
-    T_DICT,    /**< diccionario */
-    T_FUNC,    /**< funcion */
-    T_CFUNC,    /**< funcion C */
-    T_STRUCT,    /**< estructura */
-} lat_type;
+    T_NULO,         /**< nulo */
+    T_INSTANCE,     /**< instancia */
+    T_LIT,          /**< literal */
+    T_INT,          /**< entero */
+    T_DOUBLE,       /**< decimal */
+    T_STR,          /**< cadena */
+    T_BOOL,         /**< logico */
+    T_LIST,         /**< lista */
+    T_DICT,         /**< diccionario */
+    T_DICT_ITEM,    /**< diccionario */
+    T_FUNC,         /**< funcion */
+    T_CFUNC,        /**< funcion C */
+    T_STRUCT,       /**< estructura */
+} lat_tipo_objeto;
 
 /** \brief Datos del objeto
 *
@@ -65,17 +66,17 @@ typedef enum lat_type
 */
 typedef union lat_datos_objeto
 {
-    hash_map* nombre;   /**< nombre del objeto */
-    char* c;            /**< valor literal */
-    long i;             /**< valor entero */
-    double d;           /**< valor decimal */
-    char* str;          /**< valor cadena */
-    bool b;  /**< valor logico */
-    list_node* lista;  /**< valor de la lista */
-    hash_map* dict;  /**< valor del diccionario */
-    void* func;  /**< valor funcion */
-    void (*cfunc)(lat_mv*);  /**< valor funcion C */
-    void* cstruct;  /**< valor estructura */
+    hash_map* nombre;       /**< nombre del objeto */
+    char* literal;          /**< valor literal */
+    long entero;            /**< valor entero */
+    double decimal;         /**< valor decimal */
+    char* cadena;           /**< valor cadena */
+    bool logico;            /**< valor logico */
+    list_node* lista;       /**< valor de la lista */
+    hash_map* diccionario;  /**< valor del diccionario */
+    void* funcion;          /**< valor funcion */
+    void (*cfunc)(lat_mv*); /**< valor funcion C */
+    void* cstruct;          /**< valor estructura */
 } lat_datos_objeto;
 
 #define lat_objeto_CABEZA lat_objeto obj_base;
@@ -86,19 +87,19 @@ typedef union lat_datos_objeto
 */
 struct lat_objeto
 {
-    lat_type type;    /**< Tipo de objeto */
-    int marked;    /**< para marcar el objeto Colector de basura */
-    size_t data_size;   /**< Tamanio de la informacion */
-    bool es_constante;   /**< Valida si es una constante */
-    int num_declared;   /**< Numero de veces declarado */
-    lat_datos_objeto data;   /**< Informacion del objeto */
+    lat_tipo_objeto tipo;   /**< Tipo de objeto */
+    int marcado;            /**< para marcar el objeto Colector de basura */
+    size_t tamanio_datos;   /**< Tamanio de la informacion */
+    bool es_constante;      /**< Valida si es una constante */
+    int num_declarado;      /**< Numero de veces declarado */
+    lat_datos_objeto datos; /**< Informacion del objeto */
 };
 
 struct lat_llave_valor
 {
-    lat_type type;
-    lat_objeto* llave;
-    lat_objeto* valor;
+    lat_tipo_objeto tipo;   /**< Tipo de objeto */
+    lat_objeto* llave;      /**< Llave del objeto */
+    lat_objeto* valor;      /**< Valor del objeto */
 };
 
 /** \brief Asigna el objeto a un contexto (local / publico)

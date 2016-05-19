@@ -143,6 +143,16 @@ typedef struct {
   struct ast *el;   /**< Instrucciones que se ejecutan si la condicion es falsa */
 } nodo_si;
 
+/** \brief nodo para representar una funcion.
+  *
+  * funcion nombre_fun ([param1, param2, ... ]) [sentencias] fin */
+typedef struct {
+  nodo_tipo tipo;
+  struct ast *nombre;
+  struct ast *parametros;
+  struct ast *sentencias;
+} nodo_funcion;
+
 /** \brief Nodo para el elemento de una lista */
 typedef struct {
   nodo_tipo tipo;
@@ -313,7 +323,7 @@ ast *nodo_nuevo_desde(ast *dec, ast *cond, ast *inc, ast *stmts);
   * \return ast: Un nodo AST
   *
   */
-ast *nodo_nuevo_funcion(ast *name, ast *syms, ast *stmts);
+ast *nodo_nuevo_funcion(ast *nombre, ast *parametros, ast *sentencias);
 
 /** Nuevo nodo que incluye un modulo
   *

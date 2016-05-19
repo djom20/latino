@@ -88,18 +88,19 @@ typedef enum lat_ins
 typedef struct lat_bytecode
 {
     lat_ins ins;    /**< Instruccion */
-    int a;    /**< registro a */
-    int b;    /**< registro b */
-    void* meta;    /**< datos */
+    void* a;        /**< datos a */
+    void* b;        /**< datos b */
+    void* c;        /**< datos c */
 } lat_bytecode;
 
 /**\brief Define una funcion de usuario */
-typedef struct lat_function
+typedef struct lat_funcion
 {
-    int num_params;           /**< Numero de argumentos para la funcion **/
+    int num_params;         /**< Numero de argumentos para la funcion */
+    list_node* params;      /**< Parametros para la funcion */
     lat_bytecode* bcode;    /**< Instrucciones de la funcion */
     //lat_objeto *closure;
-} lat_function;
+} lat_funcion;
 
 /**\brief Define la maquina virtual (MV) */
 struct lat_mv
@@ -427,7 +428,7 @@ void lat_salir(lat_mv *mv);
   *\param meta: Datos
   *\return lat_bytecode: Objeto bytecode
   */
-lat_bytecode lat_bc(lat_ins i, int a, int b, void* meta);
+lat_bytecode lat_bc(lat_ins i, void* a, void* b, void* meta);
 
 /**\brief Ejecuta una funcion
   *

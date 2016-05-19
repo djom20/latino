@@ -1,0 +1,5 @@
+funcion f(a,b)
+  retorno a+b
+fin
+
+f(1,2)

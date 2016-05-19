@@ -167,7 +167,7 @@ lat_objeto* lat_desapilar(lat_mv *mv)
 
 void lat_apilar_lista(lat_objeto* lista, lat_objeto* o)
 {
-    insert_list(lista->data.lista, (void*)o);
+    insert_list(lista->datos.lista, (void*)o);
 }
 
 lat_objeto* lat_desapilar_lista(lat_objeto* lista)
@@ -241,9 +241,9 @@ void lat_basurero(lat_mv *mv)
     {
         if (((lat_objeto*)mv->registros[i]) != 0x0)
         {
-            if (((lat_objeto*)mv->registros[i])->marked != 3)
+            if (((lat_objeto*)mv->registros[i])->marcado != 3)
             {
-                ((lat_objeto*)mv->registros[i])->marked = 2;
+                ((lat_objeto*)mv->registros[i])->marcado = 2;
             }
         }
     }
@@ -254,7 +254,7 @@ void lat_basurero(lat_mv *mv)
         if (c->data != NULL)
         {
             cur = (lat_objeto*)c->data;
-            if (cur->marked == 0)
+            if (cur->marcado == 0)
             {
                 lat_eliminar_objeto(mv, cur);
                 list_node* prev = c->prev;
@@ -263,13 +263,13 @@ void lat_basurero(lat_mv *mv)
                 //free(c);
                 c = prev;
             }
-            else if (cur->marked == 2)
+            else if (cur->marcado == 2)
             {
-                cur->marked = 1;
+                cur->marcado = 1;
             }
-            else if (cur->marked == 1)
+            else if (cur->marcado == 1)
             {
-                cur->marked = 0;
+                cur->marcado = 0;
             }
         }
         //free(c);
@@ -279,10 +279,10 @@ void lat_basurero(lat_mv *mv)
 lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_params)
 {
     lat_objeto* ret = lat_funcion_nueva(mv);
-    lat_function* fval = (lat_function*)lat_asignar_memoria(sizeof(lat_function));
+    lat_funcion* fval = (lat_funcion*)lat_asignar_memoria(sizeof(lat_funcion));
     fval->bcode = inslist;
     fval->num_params = num_params;
-    ret->data.func = fval;
+    ret->datos.funcion = fval;
     //mv->memoria_usada += sizeof(sizeof(lat_function));
     return ret;
 }
@@ -290,7 +290,7 @@ lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_param
 lat_objeto* lat_definir_cfuncion(lat_mv *mv, void (*function)(lat_mv *mv))
 {
     lat_objeto* ret = lat_cfuncion_nueva(mv);
-    ret->data.cfunc = function;
+    ret->datos.cfunc = function;
     return ret;
 }
 
@@ -299,7 +299,7 @@ void lat_numero_lista(lat_mv *mv)
     lat_objeto* index = lat_desapilar(mv);
     long i = lat_obtener_entero(index);
     lat_objeto* lista = lat_desapilar(mv);
-    list_node* l = lista->data.lista;
+    list_node* l = lista->datos.lista;
     int counter = 0;
     list_node* c;
     for (c = l->next; c->next != NULL; c = c->next)
@@ -320,88 +320,88 @@ void lat_numero_lista(lat_mv *mv)
 static void lat_imprimir_elem(lat_mv *mv)
 {
     lat_objeto* in = lat_desapilar(mv);
-    if (in->type == T_NULO)
+    if (in->tipo == T_NULO)
     {
         fprintf(stdout, "%s", "nulo");
     }
-    else if (in->type == T_INSTANCE)
+    else if (in->tipo == T_INSTANCE)
     {
         fprintf(stdout, "%s", "objeto");
     }
-    else if (in->type == T_LIT)
+    else if (in->tipo == T_LIT)
     {
         fprintf(stdout, "%s", lat_obtener_literal(in));
     }
-    else if (in->type == T_INT)
+    else if (in->tipo == T_INT)
     {
         fprintf(stdout, "%ld", lat_obtener_entero(in));
     }
-    else if (in->type == T_DOUBLE)
+    else if (in->tipo == T_DOUBLE)
     {
         fprintf(stdout, "%.14g\n", lat_obtener_decimal(in));
     }
-    else if (in->type == T_STR)
+    else if (in->tipo == T_STR)
     {
         fprintf(stdout, "%s", lat_obtener_cadena(in));
     }
-    else if (in->type == T_BOOL)
+    else if (in->tipo == T_BOOL)
     {
         fprintf(stdout, "%i", lat_obtener_logico(in));
     }
-    else if (in->type == T_LIST)
+    else if (in->tipo == T_LIST)
     {
-        lat_imprimir_lista(mv, in->data.lista);
+        lat_imprimir_lista(mv, in->datos.lista);
     }
-    else if (in->type == T_DICT)
+    else if (in->tipo == T_DICT)
     {
-        lat_imprimir_diccionario(mv, in->data.dict);
+        lat_imprimir_diccionario(mv, in->datos.diccionario);
     }
-    else if (in->type == T_FUNC)
+    else if (in->tipo == T_FUNC)
     {
         fprintf(stdout, "%s", "Funcion");
     }
-    else if (in->type == T_CFUNC)
+    else if (in->tipo == T_CFUNC)
     {
         fprintf(stdout, "%s", "C_Funcion");
     }
-    else if (in->type == T_STRUCT)
+    else if (in->tipo == T_STRUCT)
     {
         fprintf(stdout, "%s", "Struct");
     }
     else
     {
-        fprintf(stdout, "Tipo desconocido %d\n", in->type);
+        fprintf(stdout, "Tipo desconocido %d\n", in->tipo);
     }
 }
 
 void lat_imprimir(lat_mv *mv)
 {
     lat_objeto* in = lat_desapilar(mv);
-    if (in->type == T_NULO)
+    if (in->tipo == T_NULO)
     {
         fprintf(stdout, "%s\n", "nulo");
     }
-    else if (in->type == T_INSTANCE)
+    else if (in->tipo == T_INSTANCE)
     {
         fprintf(stdout, "%s\n", "Objeto");
     }
-    else if (in->type == T_LIT)
+    else if (in->tipo == T_LIT)
     {
         fprintf(stdout, "%s\n", lat_obtener_literal(in));
     }
-    else if (in->type == T_INT)
+    else if (in->tipo == T_INT)
     {
         fprintf(stdout, "%ld\n", lat_obtener_entero(in));
     }
-    else if (in->type == T_DOUBLE)
+    else if (in->tipo == T_DOUBLE)
     {
         fprintf(stdout, "%.14g\n", lat_obtener_decimal(in));
     }
-    else if (in->type == T_STR)
+    else if (in->tipo == T_STR)
     {
         fprintf(stdout, "%s\n", lat_obtener_cadena(in));
     }
-    else if (in->type == T_BOOL)
+    else if (in->tipo == T_BOOL)
     {
         if (lat_obtener_logico(in))
         {
@@ -412,26 +412,26 @@ void lat_imprimir(lat_mv *mv)
             fprintf(stdout, "%s\n", "falso");
         }
     }
-    else if (in->type == T_LIST)
+    else if (in->tipo == T_LIST)
     {
-        lat_imprimir_lista(mv, in->data.lista);
+        lat_imprimir_lista(mv, in->datos.lista);
         fprintf(stdout, "%s\n", "");
     }
-    else if (in->type == T_FUNC)
+    else if (in->tipo == T_FUNC)
     {
         fprintf(stdout, "%s\n", "Funcion");
     }
-    else if (in->type == T_CFUNC)
+    else if (in->tipo == T_CFUNC)
     {
         fprintf(stdout, "%s\n", "C_Funcion");
     }
-    else if (in->type == T_STRUCT)
+    else if (in->tipo == T_STRUCT)
     {
         fprintf(stdout, "%s\n", "Struct");
     }
     else
     {
-        fprintf(stdout, "Tipo desconocido %d\n", in->type);
+        fprintf(stdout, "Tipo desconocido %d\n", in->tipo);
     }
     //lat_apilar(mv, in);
 }
@@ -448,9 +448,9 @@ void lat_imprimir_lista(lat_mv *mv, list_node* l)
             {
                 lat_objeto* o = ((lat_objeto*)c->data);
                 //printf("\ntype %i, obj_ref: %p\t, marked: %i", o->type, o, o->marked);
-                if (o->type == T_LIST)
+                if (o->tipo == T_LIST)
                 {
-                    lat_imprimir_lista(mv, o->data.lista);
+                    lat_imprimir_lista(mv, o->datos.lista);
                     if (c->next->data)
                     {
                         fprintf(stdout, "%s", ", ");
@@ -458,7 +458,7 @@ void lat_imprimir_lista(lat_mv *mv, list_node* l)
                 }
                 else
                 {
-                    if (o->type)
+                    if (o->tipo)
                     {
                         lat_apilar(mv, o);
                         lat_imprimir_elem(mv);
@@ -486,17 +486,17 @@ void lat_imprimir_diccionario(lat_mv *mv, hash_map* d)
             {
                 lat_objeto* o = ((lat_objeto*)c->data);
                 //printf("\ntype %i, obj_ref: %p\t, marked: %i", o->type, o, o->marked);
-                if (o->type == T_LIST)
+                if (o->tipo == T_LIST)
                 {
-                    lat_imprimir_lista(mv, o->data.lista);
+                    lat_imprimir_lista(mv, o->datos.lista);
                     if (c->next->data)
                     {
                         fprintf(stdout, "%s", ", ");
                     }
                 }
-                if (o->type == T_LIST)
+                if (o->tipo == T_LIST)
                 {
-                    lat_imprimir_diccionario(mv, o->data.dict);
+                    lat_imprimir_diccionario(mv, o->datos.diccionario);
                     if (c->next->data)
                     {
                         fprintf(stdout, "%s", ", ");
@@ -504,7 +504,7 @@ void lat_imprimir_diccionario(lat_mv *mv, hash_map* d)
                 }
                 else
                 {
-                    if (o->type)
+                    if (o->tipo)
                     {
                         lat_apilar(mv, o);
                         lat_imprimir_elem(mv);
@@ -566,8 +566,8 @@ void lat_cons(lat_mv *mv)
     lat_objeto* elem = lat_desapilar(mv);
     list_node* ret = lat_crear_lista();
     insert_list(ret, (void*)elem);
-    ret->next->next = lista->data.lista;
-    lista->data.lista->prev = ret->next;
+    ret->next->next = lista->datos.lista;
+    lista->datos.lista->prev = ret->next;
     mv->registros[255] = lat_lista_nueva(mv, ret);
 }
 
@@ -575,11 +575,11 @@ void lat_sumar(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type != T_INT && a->type != T_DOUBLE) || (b->type != T_INT && b->type != T_DOUBLE))
+    if ((a->tipo != T_INT && a->tipo != T_DOUBLE) || (b->tipo != T_INT && b->tipo != T_DOUBLE))
     {
         lat_registrar_error("Intento de aplicar operador \"+\" en tipos invalidos");
     }
-    if (a->type == T_DOUBLE || b->type == T_DOUBLE)
+    if (a->tipo == T_DOUBLE || b->tipo == T_DOUBLE)
     {
         lat_apilar(mv, lat_decimal_nuevo(mv, lat_obtener_decimal(a) + lat_obtener_decimal(b)));
     }
@@ -593,11 +593,11 @@ void lat_restar(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type != T_INT && a->type != T_DOUBLE) || (b->type != T_INT && b->type != T_DOUBLE))
+    if ((a->tipo != T_INT && a->tipo != T_DOUBLE) || (b->tipo != T_INT && b->tipo != T_DOUBLE))
     {
         lat_registrar_error("Intento de aplicar operador \"-\" en tipos invalidos");
     }
-    if (a->type == T_DOUBLE || b->type == T_DOUBLE)
+    if (a->tipo == T_DOUBLE || b->tipo == T_DOUBLE)
     {
         mv->registros[255] = lat_decimal_nuevo(mv, lat_obtener_decimal(a) - lat_obtener_decimal(b));
     }
@@ -611,17 +611,17 @@ void lat_multiplicar(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type != T_INT && a->type != T_DOUBLE) || (b->type != T_INT && b->type != T_DOUBLE))
+    if ((a->tipo != T_INT && a->tipo != T_DOUBLE) || (b->tipo != T_INT && b->tipo != T_DOUBLE))
     {
         lat_registrar_error("Intento de aplicar operador \"*\" en tipos invalidos");
     }
-    if (a->type == T_DOUBLE || b->type == T_DOUBLE)
+    if (a->tipo == T_DOUBLE || b->tipo == T_DOUBLE)
     {
-        mv->registros[255] = lat_decimal_nuevo(mv, lat_obtener_decimal(a) * lat_obtener_decimal(b));
+        lat_apilar(mv, lat_decimal_nuevo(mv, lat_obtener_decimal(a) * lat_obtener_decimal(b)));
     }
     else
     {
-        mv->registros[255] = lat_entero_nuevo(mv, lat_obtener_entero(a) * lat_obtener_entero(b));
+        lat_apilar(mv, lat_entero_nuevo(mv, lat_obtener_entero(a) * lat_obtener_entero(b)));
     }
 }
 
@@ -629,11 +629,11 @@ void lat_dividir(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type != T_INT && a->type != T_DOUBLE) || (b->type != T_INT && b->type != T_DOUBLE))
+    if ((a->tipo != T_INT && a->tipo != T_DOUBLE) || (b->tipo != T_INT && b->tipo != T_DOUBLE))
     {
         lat_registrar_error("Intento de aplicar operador \"/\" en tipos invalidos");
     }
-    if ((a->type == T_DOUBLE && b->type == T_DOUBLE) || (a->type == T_INT && b->type == T_DOUBLE))
+    if ((a->tipo == T_DOUBLE && b->tipo == T_DOUBLE) || (a->tipo == T_INT && b->tipo == T_DOUBLE))
     {
         double tmp = lat_obtener_decimal(b);
         if (tmp == 0)
@@ -654,7 +654,7 @@ void lat_dividir(lat_mv *mv)
         }
         else
         {
-            if (a->type == T_DOUBLE)
+            if (a->tipo == T_DOUBLE)
             {
                 mv->registros[255] = lat_decimal_nuevo(mv, (lat_obtener_decimal(a) / tmp));
             }
@@ -670,7 +670,7 @@ void lat_modulo(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if (a->type != T_INT || b->type != T_INT)
+    if (a->tipo != T_INT || b->tipo != T_INT)
     {
         lat_registrar_error("Intento de aplicar operador \"%%\" en tipos invalidos");
     }
@@ -689,22 +689,22 @@ void lat_diferente(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if (a->type == T_BOOL && b->type == T_BOOL)
+    if (a->tipo == T_BOOL && b->tipo == T_BOOL)
     {
         mv->registros[255] = lat_obtener_logico(a) != lat_obtener_logico(b) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) != lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) != 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) != 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -716,22 +716,22 @@ void lat_igualdad(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if (a->type == T_BOOL && b->type == T_BOOL)
+    if (a->tipo == T_BOOL && b->tipo == T_BOOL)
     {
         mv->registros[255] = lat_obtener_logico(a) == lat_obtener_logico(b) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) == lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) == 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) == 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -743,17 +743,17 @@ void lat_menor_que(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) < lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) < 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) < 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -765,17 +765,17 @@ void lat_menor_igual(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) <= lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) <= 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) <= 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -787,17 +787,17 @@ void lat_mayor_que(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) > lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) > 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) > 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -809,17 +809,17 @@ void lat_mayor_igual(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((a->type == T_INT || a->type == T_DOUBLE) && (b->type == T_INT || b->type == T_DOUBLE))
+    if ((a->tipo == T_INT || a->tipo == T_DOUBLE) && (b->tipo == T_INT || b->tipo == T_DOUBLE))
     {
         mv->registros[255] = (lat_obtener_decimal(a) >= lat_obtener_decimal(b)) ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_STR && b->type == T_STR)
+    if (a->tipo == T_STR && b->tipo == T_STR)
     {
         mv->registros[255] = strcmp(lat_obtener_cadena(a), lat_obtener_cadena(b)) >= 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
     }
-    if (a->type == T_LIT && b->type == T_LIT)
+    if (a->tipo == T_LIT && b->tipo == T_LIT)
     {
         mv->registros[255] = strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) >= 0 ? mv->objeto_cierto : mv->objeto_falso;
         return;
@@ -831,7 +831,7 @@ void lat_y(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((b->type != T_BOOL && b->type != T_INT) || (a->type != T_BOOL && a->type != T_INT))
+    if ((b->tipo != T_BOOL && b->tipo != T_INT) || (a->tipo != T_BOOL && a->tipo != T_INT))
     {
         lat_registrar_error("Intento de aplicar operador \"y\" en tipos invalidos");
     }
@@ -842,7 +842,7 @@ void lat_o(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
-    if ((b->type != T_BOOL && b->type != T_INT) || (a->type != T_BOOL && a->type != T_INT))
+    if ((b->tipo != T_BOOL && b->tipo != T_INT) || (a->tipo != T_BOOL && a->tipo != T_INT))
     {
         lat_registrar_error("Intento de aplicar operador \"y\" en tipos invalidos");
     }
@@ -852,20 +852,20 @@ void lat_o(lat_mv *mv)
 void lat_negacion(lat_mv *mv)
 {
     lat_objeto* o = lat_desapilar(mv);
-    if (o->type != T_BOOL && o->type != T_INT)
+    if (o->tipo != T_BOOL && o->tipo != T_INT)
     {
         lat_registrar_error("Intento de negar tipo invalido");
     }
     mv->registros[255] =  lat_obtener_logico(o) == true ? mv->objeto_falso : mv->objeto_cierto;
 }
 
-lat_bytecode lat_bc(lat_ins i, int a, int b, void* meta)
+lat_bytecode lat_bc(lat_ins i, void* a, void* b, void* c)
 {
     lat_bytecode ret;
     ret.ins = i;
     ret.a = a;
     ret.b = b;
-    ret.meta = meta;
+    ret.c = c;
     return ret;
 }
 
@@ -909,23 +909,23 @@ lat_objeto* lista_obtener_elemento(list_node* l, int pos)
 
 lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
 {
-    if (func->type == T_FUNC)
+    if (func->tipo == T_FUNC)
     {
         if(!mv->REPL)
         {
             lat_apilar_contexto(mv);
         }
         lat_asignar_contexto_objeto(lat_obtener_contexto(mv), lat_cadena_nueva(mv, "$"), func);
-        lat_bytecode* inslist = ((lat_function*)func->data.func)->bcode;
+        lat_bytecode* inslist = ((lat_funcion*)func->datos.funcion)->bcode;
         lat_bytecode cur;
         int pos;
         for (pos = 0, cur = inslist[pos]; cur.ins != RETURN_VALUE; cur = inslist[++pos])
         {
             switch (cur.ins)
             {
-            case OP_NOP:
+            /*case OP_NOP:
                 break;
-            /*case OP_PUSH:
+            case OP_PUSH:
                 lat_apilar(mv, mv->registros[cur.a]);
                 break;
             case OP_POP:
@@ -958,7 +958,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             case OP_STORELIST:
                 mv->registros[cur.a] = lat_lista_nueva(mv, lat_crear_lista());
                 break;
-            */
+
             case OP_PUSHLIST:
                 lat_apilar_lista(mv->registros[cur.a], mv->registros[cur.b]);
                 break;
@@ -970,18 +970,18 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             {
                 lat_objeto *l = mv->registros[cur.a];
                 lat_objeto *pos = mv->registros[cur.b];
-                mv->registros[cur.a] = lista_obtener_elemento(l->data.lista, pos->data.i);
+                mv->registros[cur.a] = lista_obtener_elemento(l->datos.lista, pos->datos.entero);
             }
             break;
             case OP_LISTSETITEM:
             {
                 lat_objeto *l = mv->registros[cur.a];
                 lat_objeto *pos = mv->registros[(int)cur.meta];
-                if(pos->type != T_INT)
+                if(pos->tipo != T_INT)
                 {
                     lat_registrar_error("%s", "la posicion de la lista no es un entero");
                 }
-                lista_modificar_elemento(l->data.lista, (lat_objeto*)mv->registros[cur.b], pos->data.i);
+                lista_modificar_elemento(l->datos.lista, (lat_objeto*)mv->registros[cur.b], pos->datos.entero);
             }
             break;
             case OP_STOREDICT:
@@ -1025,89 +1025,85 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                 mv->registros[cur.a] = lat_obtener_logico(mv->registros[cur.a]) == true ? mv->objeto_falso : mv->objeto_cierto;
                 break;
             case OP_INC:
-                ((lat_objeto*)mv->registros[cur.a])->data.i++;
+                ((lat_objeto*)mv->registros[cur.a])->datos.entero++;
                 break;
             case OP_DEC:
-                ((lat_objeto*)mv->registros[cur.a])->data.i--;
+                ((lat_objeto*)mv->registros[cur.a])->datos.entero--;
                 break;
+            */
 
-            /* redefinicion de instrucciones */
+            /* redefinicion de instrucciones estilo Python*/
             case LOAD_CONST:
-                lat_apilar(mv, (lat_objeto*)cur.meta);
-                printf("\nLOAD_CONST %ld\n", lat_obtener_entero((lat_objeto*)cur.meta));
+                lat_apilar(mv, (lat_objeto*)cur.a);
+                /*printf("\nLOAD_CONST %ld\n", lat_obtener_entero((lat_objeto*)cur.a));
                 lat_imprimir_lista(mv, mv->pila);
-                printf("\n");
+                printf("\n");*/
                 break;
             case STORE_NAME:{
                     lat_objeto *contexto = lat_obtener_contexto(mv);
-                    lat_objeto *variable = (lat_objeto*)cur.meta;
+                    lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_desapilar(mv);
                     lat_asignar_contexto_objeto(contexto, variable, valor);
-                    printf("\nSTORE_NAME %s\n", lat_obtener_cadena(variable));
+                    /*printf("\nSTORE_NAME %s\n", lat_obtener_cadena(variable));
                     lat_imprimir_lista(mv, mv->pila);
-                    printf("\n");
+                    printf("\n");*/
                 }
                 break;
             case LOAD_NAME: {
                     lat_objeto *contexto = lat_obtener_contexto(mv);
-                    lat_objeto *variable = (lat_objeto*)cur.meta;
+                    lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
-                    printf("\nLOAD_NAME %s\n", lat_obtener_cadena(variable));
+                    /*printf("\nLOAD_NAME %s\n", lat_obtener_cadena(variable));
                     lat_imprimir_lista(mv, mv->pila);
-                    printf("\n");
-                }
-                break;
-            case CALL_FUNCTION:
-                {
-                    printf("\nantes de llamar Cfuncion\n");
-                    lat_imprimir_lista(mv, mv->pila);
-                    printf("\n");
-                    lat_objeto* funcion = lat_desapilar(mv);
-                    if(funcion != NULL)
-                    {
-                        if(funcion->type == T_FUNC){
-                            lat_objeto* res = lat_llamar_funcion(mv, funcion);
-                            printf("\ndespues de llamar funcion\n");
-                            lat_imprimir_lista(mv, mv->pila);
-                            printf("\n");
-                            //desapilar resultado
-                            //lat_objeto* res = lat_desapilar(mv);
-                            //desapilar argumentos
-                            int i;
-                            for(i=0; i < cur.a; i++){
-                                lat_desapilar(mv);
-                            }
-                            //apilar resultado
-                            //lat_apilar(mv, res);
-                            printf("\ndespues de desapilar argumentos\n");
-                            lat_imprimir_lista(mv, mv->pila);
-                            printf("\n");
-                        }else{
-                            lat_desapilar(mv);
-                            lat_desapilar(mv);
-                            lat_objeto* res = lat_llamar_funcion(mv, funcion);
-                             printf("\ndespues de llamar Cfuncion\n");
-                            lat_imprimir_lista(mv, mv->pila);
-                            printf("\n");
-                        }
-                    }
+                    printf("\n");*/
                 }
                 break;
             case MAKE_FUNCTION: {
-                    printf("\nantes de crear funcion\n");
+                    /*printf("\nantes de crear funcion\n");
                     lat_imprimir_lista(mv, mv->pila);
-                    printf("\n");
-                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.meta, cur.a);
+                    printf("\n");*/
+                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int*)cur.b);
                     //desapilar parametros
                     //int i;
                     //for(i=0; i < cur.a; i++){
                     //    lat_desapilar(mv);
                     //}
                     lat_apilar(mv, funcion_usuario);
-                    printf("\ndespues de crear funcion\n");
+                    /*printf("\ndespues de crear funcion\n");
+                    lat_imprimir_lista(mv, mv->pila);
+                    printf("\n");*/
+                }
+                break;
+            case CALL_FUNCTION:
+                {
+
+                    printf("\nAntes de llamar Funcion\n");
                     lat_imprimir_lista(mv, mv->pila);
                     printf("\n");
+
+                    lat_objeto* funcion = lat_desapilar(mv);
+                    lat_objeto* resultado = NULL;
+                    if(funcion->tipo == T_FUNC){
+                        resultado = lat_llamar_funcion(mv, funcion);
+                        if(resultado == NULL) {
+                            resultado = lat_desapilar(mv);
+                        }
+                        printf("\nDespues de llamar Funcion\n");
+                        lat_imprimir_lista(mv, mv->pila);
+                        printf("\n");
+                        return resultado;
+                    }else{
+                        lat_llamar_funcion(mv, funcion);
+                        resultado = lat_desapilar(mv);
+                        printf("\nDespues de llamar Funcion\n");
+                        lat_imprimir_lista(mv, mv->pila);
+                        printf("\n");
+                        return resultado;
+                    }
+
+                    //lat_objeto* res = lat_desapilar(mv);
+                    //return res;
                 }
                 break;
             case RETURN_VALUE:
@@ -1120,6 +1116,8 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             case BINARY_ADD:
                 {
                     lat_sumar(mv);
+                    lat_objeto* resultado = lat_desapilar(mv);
+                    return resultado;
                 }
             }   //end switch
         }   //end for
@@ -1128,26 +1126,25 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             lat_desapilar_contexto(mv);
         }
     }
-    else if (func->type == T_CFUNC)
+    else if (func->tipo == T_CFUNC)
     {
-        //desapilar funcion
-        //lat_objeto* cfun = lat_desapilar(mv);
-        //printf("\nllamando a funcion: %s\n", cfun->data.str);
-        ((void (*)(lat_mv*))(func->data.func))(mv);
+
+        printf("\nAntes de llamar CFuncion\n");
+        lat_imprimir_lista(mv, mv->pila);
+        printf("\n");
+
+        ((void (*)(lat_mv*))(func->datos.funcion))(mv);
+
+        printf("\nDespues de llamar CFuncion\n");
+        lat_imprimir_lista(mv, mv->pila);
+        printf("\n");
+
         //lat_objeto* res = lat_desapilar(mv);
         //return res;
-        //lat_imprimir_lista(mv, mv->pila);
-        //desapilar argumentos
-        //int i;
-        //for(i=0; i < 2; i++){
-        //    lat_desapilar(mv);
-        //}
-        //apilar resultado
-        //lat_apilar(mv, res);
     }
     else
     {
-        debug("func->type: %d", func->type);
+        debug("func->type: %d", func->tipo);
         lat_registrar_error("Object not a function");
     }
 }
@@ -1156,10 +1153,10 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
 void lat_logico(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_INT:
-        if(a->data.i == 0)
+        if(a->datos.entero == 0)
         {
             mv->registros[255] = mv->objeto_falso;
         }
@@ -1169,7 +1166,7 @@ void lat_logico(lat_mv *mv)
         }
         break;
     case T_LIT:
-        if(strcmp(a->data.c, "") == 0)
+        if(strcmp(a->datos.literal, "") == 0)
         {
             mv->registros[255] = mv->objeto_falso;
         }
@@ -1179,7 +1176,7 @@ void lat_logico(lat_mv *mv)
         }
         break;
     case T_DOUBLE:
-        if((int)a->data.d == 0)
+        if((int)a->datos.decimal == 0)
         {
             mv->registros[255] = mv->objeto_falso;
         }
@@ -1189,7 +1186,7 @@ void lat_logico(lat_mv *mv)
         }
         break;
     case T_STR:
-        if(strcmp(a->data.str, "") == 0)
+        if(strcmp(a->datos.cadena, "") == 0)
         {
             mv->registros[255] = mv->objeto_falso;
         }
@@ -1206,10 +1203,10 @@ void lat_logico(lat_mv *mv)
 void lat_entero(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
-        if(a->data.b == false)
+        if(a->datos.logico == false)
         {
             mv->registros[255] = lat_entero_nuevo(mv, 0);
         }
@@ -1222,7 +1219,7 @@ void lat_entero(lat_mv *mv)
     {
         char *ptr;
         long ret;
-        ret =strtol(a->data.c, &ptr, 10);
+        ret =strtol(a->datos.literal, &ptr, 10);
         if(strcmp(ptr, "") == 0)
         {
             mv->registros[255] = lat_entero_nuevo(mv, ret);
@@ -1234,13 +1231,13 @@ void lat_entero(lat_mv *mv)
     }
     break;
     case T_DOUBLE:
-        mv->registros[255] = lat_entero_nuevo(mv, (int)a->data.d);
+        mv->registros[255] = lat_entero_nuevo(mv, (int)a->datos.decimal);
         break;
     case T_STR:
     {
         char *ptr;
         long ret;
-        ret =strtol(a->data.str, &ptr, 10);
+        ret =strtol(a->datos.cadena, &ptr, 10);
         if(strcmp(ptr, "") == 0)
         {
             mv->registros[255] = lat_entero_nuevo(mv, ret);
@@ -1259,10 +1256,10 @@ void lat_entero(lat_mv *mv)
 void lat_literal(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
-        if(a->data.b == false)
+        if(a->datos.logico == false)
         {
             mv->registros[255] = lat_literal_nuevo(mv, "falso");
         }
@@ -1284,10 +1281,10 @@ void lat_literal(lat_mv *mv)
 void lat_decimal(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
-        if(a->data.b == false)
+        if(a->datos.logico == false)
         {
             mv->registros[255] = lat_decimal_nuevo(mv, 0);
         }
@@ -1297,16 +1294,16 @@ void lat_decimal(lat_mv *mv)
         }
         break;
     case T_INT:
-        mv->registros[255] = lat_decimal_nuevo(mv, (double)a->data.i);
+        mv->registros[255] = lat_decimal_nuevo(mv, (double)a->datos.entero);
         break;
     case T_DOUBLE:
-        mv->registros[255] = lat_decimal_nuevo(mv, (double)a->data.i);
+        mv->registros[255] = lat_decimal_nuevo(mv, (double)a->datos.entero);
         break;
     case T_STR:
     {
         char *ptr;
         double ret;
-        ret =strtod(a->data.str, &ptr);
+        ret =strtod(a->datos.cadena, &ptr);
         if(strcmp(ptr, "") == 0)
         {
             mv->registros[255] = lat_decimal_nuevo(mv, ret);
@@ -1326,16 +1323,16 @@ void lat_decimal(lat_mv *mv)
 void lat_cadena(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
-        mv->registros[255] = lat_cadena_nueva(mv, bool2str(a->data.b));
+        mv->registros[255] = lat_cadena_nueva(mv, bool2str(a->datos.logico));
         break;
     case T_INT:
-        mv->registros[255] = lat_cadena_nueva(mv, int2str(a->data.i));
+        mv->registros[255] = lat_cadena_nueva(mv, int2str(a->datos.entero));
         break;
     case T_DOUBLE:
-        mv->registros[255] = lat_cadena_nueva(mv, double2str(a->data.d));
+        mv->registros[255] = lat_cadena_nueva(mv, double2str(a->datos.decimal));
         break;
     default:
         mv->registros[255] = a;
@@ -1374,7 +1371,7 @@ void lat_minimo(lat_mv *mv)
 void lat_tipo(lat_mv *mv)
 {
     lat_objeto* a = lat_desapilar(mv);
-    switch (a->type)
+    switch (a->tipo)
     {
     case T_BOOL:
         mv->registros[255] = lat_cadena_nueva(mv, "logico");

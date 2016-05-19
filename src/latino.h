@@ -44,6 +44,17 @@ THE SOFTWARE.
 *
 */
 
+/** Version mayor de Latino */
+#define LAT_VERSION_MAYOR "0"
+/** Version menor de Latino */
+#define LAT_VERSION_MENOR "5"
+/** Version de correcion de errores */
+#define LAT_VERSION_PARCHE "0"
+/** Version de Latino */
+#define LAT_VERSION "Latino " LAT_VERSION_MAYOR "." LAT_VERSION_MENOR "." LAT_VERSION_PARCHE
+/** Derechos de Latino */
+#define LAT_DERECHOS LAT_VERSION "\nTodos los derechos reservados (C) 2015-2016. Latinoamerica"
+
 /** Determina si el sistema es GNU */
 #ifdef _WIN32
 #define PATH_SEP "\\"
@@ -68,17 +79,6 @@ THE SOFTWARE.
 #define LAT_TRY(L,c,a)		if (setjmp((c)->b) == 0) { a }
 #define lat_jmpbuf		jmp_buf
 
-/** Version mayor de Latino */
-#define LAT_VERSION_MAYOR "0"
-/** Version menor de Latino */
-#define LAT_VERSION_MENOR "5"
-/** Version de correcion de errores */
-#define LAT_VERSION_PARCHE "0"
-/** Version de Latino */
-#define LAT_VERSION "Latino " LAT_VERSION_MAYOR "." LAT_VERSION_MENOR "." LAT_VERSION_PARCHE
-/** Derechos de Latino */
-#define LAT_DERECHOS LAT_VERSION "\nTodos los derechos reservados (C) 2015-2016. Latinoamerica"
-
 // generado en
 // http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=latino
 /**
@@ -92,9 +92,8 @@ THE SOFTWARE.
 /** Indica si se desea debuguear el parser de bison */
 extern int debug;
 
-extern int parse_silent;
-
-//extern int parse_silent = 0;
+/** Indica que el analizador sintactico (bison) no debe emitir errores **/
+extern int analisis_silencioso;
 
 /** Tamanio maximo de instrucciones bytecode de una funcion */
 #define MAX_BYTECODE_FUNCTION (1024 * 10)
@@ -106,12 +105,12 @@ extern int parse_silent;
 #define MAX_STR_LENGTH (1024*2)
 /** Tamanio maximo de la pila de la maquina virtual */
 #define MAX_STACK_SIZE 255
-
 /** Tamanio maximo de una ruta de derectorio */
 #define MAX_PATH_LENGTH 1024
-
 /** Tamanio maximo de la entrada por teclado */
 #define MAX_INPUT_SIZE 512
+/** Maximo numero de argumentos de una funcion */
+#define MAX_FUNC_ARGS 20
 
 /** Interface con flex */
 typedef struct YYLTYPE

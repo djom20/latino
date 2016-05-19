@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 /* 1 para debuguear analizador */
 int yydebug = 0;
-int parse_silent;
+int analisis_silencioso;
 static FILE *file;
 static char *buffer;
 
@@ -134,7 +134,7 @@ void lat_ayuda()
 }
 
 static int leer_linea(lat_mv *mv, char* buffer){
-    parse_silent = 1;
+    analisis_silencioso = 1;
     int resultado;
     char *input = "";
     //buffer = lat_asignar_memoria(MAX_STR_LENGTH);
@@ -283,7 +283,7 @@ static void lat_repl(lat_mv *mv)
     linenoiseSetCompletionCallback(completion);
     while (leer_linea(mv, buf) != -1)
     {
-        parse_silent = 0;
+        analisis_silencioso = 0;
         tmp = lat_analizar_expresion(mv, buf, &status);
         if(tmp != NULL)
         {
@@ -345,9 +345,12 @@ int main(int argc, char *argv[])
         {
             return EXIT_FAILURE;
         }
-        lat_objeto *mainFunc = nodo_analizar_arbol(mv, tree);
-        lat_llamar_funcion(mv, mainFunc);
-        //lat_apilar(mv, mv->registros[255]);
+        lat_objeto* mainFunc = nodo_analizar_arbol(mv, tree);
+        lat_objeto* resultado = lat_llamar_funcion(mv, mainFunc);
+        if(resultado->tipo != NULL){
+            lat_apilar(mv, resultado);
+            lat_imprimir(mv);
+        }
         if(file != NULL)
         {
             fclose(file);

@@ -1,8 +1,5 @@
-x = 1
-y = 2
-funcion algo()
-    x = 2
-    retorno x + y
+funcion f(a,b)
+  retorno a*b
 fin
 
-escribir(algo())
+f(2,3)
