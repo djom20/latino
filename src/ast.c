@@ -257,7 +257,7 @@ lat_objeto *nodo_analizar_arbol(lat_mv *mv, ast *tree)
 {
     lat_bytecode *bcode = (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
     int i = nodo_analizar(mv, tree, bcode, 0);
-    dbc(RETURN_VALUE, 0, 0, NULL);
+    dbc(RETURN_VALUE, NULL, NULL, NULL);
     nodo_liberar(tree);
     return lat_definir_funcion(mv, bcode, 0);
 }
@@ -336,7 +336,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
         dbc(LOAD_NAME, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_NAME %s\n", ret->datos.cadena);
+        printf("%i\tLOAD_NAME %s\n", i, ret->datos.cadena);
 #endif
     }
     break;
@@ -346,7 +346,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_cadena_nueva(mv, node->r->valor->v.s);
         dbc(STORE_NAME, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("STORE_NAME %s\n", ret->datos.cadena);
+        printf("%i\tSTORE_NAME %s\n", i, ret->datos.cadena);
 #endif
     }
     break;
@@ -375,7 +375,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_literal_nuevo(mv, node->valor->v.c);
         dbc(LOAD_CONST, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_CONST %s\n", ret->datos.literal);
+        printf("%i\tLOAD_CONST %s\n", i, ret->datos.literal);
 #endif
     }
     break;
@@ -384,7 +384,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_entero_nuevo(mv, node->valor->v.i);
         dbc(LOAD_CONST, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_CONST %ld\n", ret->datos.entero);
+        printf("%i\tLOAD_CONST %ld\n", i, ret->datos.entero);
 #endif
     }
     break;
@@ -393,7 +393,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_decimal_nuevo(mv, node->valor->v.d);
         dbc(LOAD_CONST, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_CONST %.14g\n", ret->datos.decimal);
+        printf("%i\tLOAD_CONST %.14g\n", i, ret->datos.decimal);
 #endif
     }
     break;
@@ -402,7 +402,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
         dbc(LOAD_CONST, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_CONST %s\n", ret->datos.cadena);
+        printf("%i\tLOAD_CONST %s\n", i, ret->datos.cadena);
 #endif
     }
     break;
@@ -411,42 +411,44 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         lat_objeto *ret = node->valor->v.b ? mv->objeto_cierto : mv->objeto_falso;
         dbc(LOAD_CONST, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("LOAD_CONST %i\n", ret->datos.logico);
+        printf("%i\tLOAD_CONST %i\n", i, ret->datos.logico);
 #endif
     }
     break;
-    /*case NODO_SI:
+    case NODO_SI:
     {
         nodo_si *nIf = ((nodo_si *)node);
         pn(mv, nIf->cond);
-        dbc(OP_MOV, 2, 255, NULL);
-        dbc(OP_MOV, 3, 255, NULL);
-        dbc(OP_NOT, 2, 0, NULL);
         temp[0] = i;
-        dbc(OP_NOP, 0, 0, NULL);
-        pn(mv, nIf->th);
-        bcode[temp[0]] = lat_bc(OP_JMPIF, i, 2, NULL);
+        /*instruccion auxiliar para suplantar por jump_if_true */
+        dbc(NOP, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("MOV R2 R255\n");
-        printf("MOV R3 R255\n");
-        printf("NOT\n");
-        printf("NOP R0 R0\n");
-        printf("JMPIF R%i R2\n", i);
+        printf("%i\tNOP\n", i);
+#endif
+        pn(mv, nIf->th);
+        bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)i, NULL, NULL);
+#if DEPURAR_MV
+        printf("%i\tPOP_JUMP_IF_FALSE %i\n", i, i);
 #endif
         if (nIf->el)
         {
+            pn(mv, nIf->cond);  //TODO: Quitar esta evaluacion
             temp[1] = i;
-            dbc(OP_NOP, 0, 0, NULL);
-            pn(mv, nIf->el);
-            bcode[temp[1]] = lat_bc(OP_JMPIF, i, 3, NULL);
+            /*instruccion auxiliar para suplantar por jump_if_false */
+            dbc(NOP, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("NOP\n");
-            printf("MOV R3 R255\n");
-            printf("JMPIF R%i R3\n", i);
+            printf("%i\tNOP\n", i);
+#endif
+            pn(mv, nIf->el);
+            bcode[temp[1]] = lat_bc(POP_JUMP_IF_TRUE, (void*)i, NULL, NULL);
+#if DEPURAR_MV            
+            printf("%i\tPOP_JUMP_IF_TRUE %i\n", i, i);
 #endif
         }
     }
     break;
+    
+    /*
     case NODO_MIENTRAS:
     {
         temp[0] = i;
@@ -496,31 +498,22 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
         fi = 0;
         num_params = 0;
-
         //parametros de la funcion
-        //printf("inicio PARAMETROS\n");
         if (nFun->parametros)
         {
             fpn(mv, nFun->parametros);
-        }
-        //printf("fin PARAMETROS\n");
-        //printf("inicio INSTRUCCIONES\n");
-        //sentencias de la funcion
-        fpn(mv, nFun->sentencias);
-        //printf("fin INSTRUCCIONES\n");
-        dbc(MAKE_FUNCTION, (void*)funcion_bcode, (void*)num_params, NULL);
-        //nombre de la funcion
-        //pn(mv, nFun->nombre);
+        }        
+        fpn(mv, nFun->sentencias);        
+        dbc(MAKE_FUNCTION, (void*)funcion_bcode, (void*)num_params, NULL);        
         lat_objeto *ret = lat_cadena_nueva(mv, nFun->nombre->valor->v.s);
         dbc(STORE_NAME, ret, NULL, NULL);
 #if DEPURAR_MV
-        printf("MAKE_FUNCTION %i\n", num_params);
-        printf("STORE_NAME %s\n", nFun->nombre->valor->v.s);
+        printf("%i\tMAKE_FUNCTION %i\n", i, num_params);
+        printf("%i\tSTORE_NAME %s\n", i, nFun->nombre->valor->v.s);
 #endif
         funcion_bcode = NULL;
         fi = 0;
-        num_params = 0;
-        //printf("fin NODO_FUNCION_USUARIO\n");
+        num_params = 0;        
     }
     break;
     case NODO_LISTA_PARAMETROS:
@@ -535,7 +528,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             //pn(mv, node->l);
             num_params++;
 #if DEPURAR_MV
-            printf("STORE_NAME %s\n", ret->datos.cadena);
+            printf("%i\tSTORE_NAME %s\n", i, ret->datos.cadena);
 #endif
         }
         if (node->r)
@@ -554,7 +547,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         pn(mv, node->l);
         dbc(CALL_FUNCTION, (void*)num_args, NULL, NULL);
 #if DEPURAR_MV
-        printf("CALL_FUNCTION %i\n", num_args);
+        printf("%i\tCALL_FUNCTION %i\n", i, num_args);
 #endif
         num_args = 0;
     }
@@ -564,7 +557,7 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         pn(mv, node->l);
         dbc(RETURN_VALUE, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("RETURN_VALUE\n");
+        printf("%i\tRETURN_VALUE\n", i);
 #endif
     }
     break;
@@ -574,24 +567,12 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         {
             pn(mv, node->l);
             num_args++;
-            //dbc(OP_PUSH, 255, 0, NULL);
-#if DEPURAR_MV
-            //printf("PUSH R255\n");
-#endif
         }
         if (node->r)
         {
             pn(mv, node->r);
             if(node->r->valor)
                 num_args++;
-            //Soporte para recursion NODO_FUNCION_LLAMADA
-            //if (node->r->valor || node->r->tipo == NODO_FUNCION_LLAMADA)
-            //{
-            //    dbc(OP_PUSH, 255, 0, NULL);
-#if DEPURAR_MV
-            //    printf("PUSH R255\n");
-#endif
-            //}
         }
     }
     break;
@@ -603,9 +584,9 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             if(node->r){
                 pn(mv, node->r);
             }
-            dbc(BINARY_ADD, 0, 0, NULL);
+            dbc(BINARY_ADD, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("BINARY_ADD\n");
+        printf("%i\tBINARY_ADD\n", i);
 #endif
         }break;
     case NODO_RESTA:
@@ -616,9 +597,9 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             if(node->r){
                 pn(mv, node->r);
             }
-            dbc(BINARY_SUBTRACT, 0, 0, NULL);
+            dbc(BINARY_SUBTRACT, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("BINARY_SUBTRACT\n");
+        printf("%i\tBINARY_SUBTRACT\n", i);
 #endif
         }break;
     case NODO_MULTIPLICACION:
@@ -629,9 +610,9 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             if(node->r){
                 pn(mv, node->r);
             }
-            dbc(BINARY_MULTIPLY, 0, 0, NULL);
+            dbc(BINARY_MULTIPLY, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("BINARY_MULTIPLY\n");
+        printf("%i\tBINARY_MULTIPLY\n", i);
 #endif
         }break;
     case NODO_DIVISION:
@@ -642,9 +623,9 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             if(node->r){
                 pn(mv, node->r);
             }
-            dbc(BINARY_FLOOR_DIVIDE, 0, 0, NULL);
+            dbc(BINARY_FLOOR_DIVIDE, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("BINARY_FLOOR_DIVIDE\n");
+        printf("%i\tBINARY_FLOOR_DIVIDE\n", i);
 #endif
         }break;
     case NODO_MODULO:
@@ -655,192 +636,89 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
             if(node->r){
                 pn(mv, node->r);
             }
-            dbc(BINARY_MODULO, 0, 0, NULL);
+            dbc(BINARY_MODULO, NULL, NULL, NULL);
 #if DEPURAR_MV
-        printf("BINARY_MODULO\n");
+        printf("%i\tBINARY_MODULO\n", i);
 #endif
         }break;
-/*
-    case NODO_LISTA:
-    {
-        nested++;
-        //dbc(OP_STORELIST, nested, 0, NULL);
-#if DEPURAR_MV
-        printf("STORELIST R%i\n", nested);
-#endif
-        if (node->l)
+    case NODO_MENOR_QUE:
         {
-            pn(mv, node->l);
-            dbc(OP_MOV, 255, nested, NULL);
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_LT, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("MOV R255 R%i\n", nested);
+        printf("%i\tCOMPARE_OP_LT\n", i);
 #endif
-        }
-        nested--;
-    }
-    break;
-    case NODO_LISTA_AGREGAR_ELEMENTO:
-    {
-        if (node->l)
+        }break;
+    case NODO_MENOR_IGUAL:
         {
-            pn(mv, node->l);
-            dbc(OP_PUSHLIST, nested, 255, NULL);
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_LTE, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("PUSHLIST R%i R255\n", nested);
+        printf("%i\t\COMPARE_OP_LTE\n", i);
 #endif
-        }
-        if (node->r)
+        }break;
+    case NODO_MAYOR_QUE:
         {
-            pn(mv, node->r);
-        }
-    }
-    break;
-    case NODO_LISTA_ASIGNAR_ELEMENTO:
-    {
-        nodo_lista_elem *elem = ((nodo_lista_elem *)node);
-        if (elem->exp)
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_GT, NULL, NULL, NULL);
+#if DEPURAR_MV
+        printf("%i\t\COMPARE_OP_GT\n", i);
+#endif
+        }break;
+    case NODO_MAYOR_IGUAL:
         {
-            pn(mv, elem->exp);
-            dbc(OP_MOV, 3, 255, NULL);
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_GTE, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("MOV R3 R255\n");
+        printf("%i\t\COMPARE_OP_GTE\n", i);
 #endif
-        }
-        if(elem->id)
+        }break;
+    case NODO_IGUALDAD:
         {
-            pn(mv, elem->pos);
-            dbc(OP_MOV, 4, 255, NULL);
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_EQ, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("MOV R4 R255\n");
+        printf("%i\t\COMPARE_OP_EQ\n", i);
 #endif
-            pn(mv, elem->id);
-            dbc(OP_LISTSETITEM, 255, 3, (void*)4);
-#if DEPURAR_MV
-            printf("LISTSETITEM R255 R3\n");
-#endif
-        }
-    }
-    break;
-    case NODO_LISTA_OBTENER_ELEMENTO:
-    {
-        if (node->l)
+        }break;
+    case NODO_DESIGUALDAD:
         {
-            pn(mv, node->l);
-            dbc(OP_MOV, 3, 255, NULL);
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(COMPARE_OP_NEQ, NULL, NULL, NULL);
 #if DEPURAR_MV
-            printf("MOV R3 R255\n");
+        printf("%i\t\COMPARE_OP_NEQ\n", i);
 #endif
-        }
-        if (node->r)
-        {
-            pn(mv, node->r);
-            dbc(OP_LISTGETITEM, 255, 3, NULL);
-#if DEPURAR_MV
-            printf("LISTGETITEM R55 R3\n");
-#endif
-        }
-    }
-    break;
-    case NODO_DICCIONARIO:
-    {
-        nested++;
-        dbc(OP_STOREDICT, nested, 0, NULL);
-#if DEPURAR_MV
-        printf("STOREDICT R%i\n", nested);
-#endif
-        if (node->l)
-        {
-            pn(mv, node->l);
-            dbc(OP_MOV, 255, nested, NULL);
-#if DEPURAR_MV
-            printf("MOV R255 R%i\n", nested);
-#endif
-        }
-        nested--;
-    }
-    break;
-    case NODO_DICC_AGREGAR_ELEMENTO:
-    {
-        if(node->l)
-        {
-            pn(mv, node->l);
-            dbc(OP_PUSHDICT, nested, 255, NULL);
-#if DEPURAR_MV
-            printf("PUSHDICT R%i R255\n", nested);
-#endif
-        }
-        if(node->r)
-        {
-            pn(mv, node->r);
-        }
-    }
-    break;
-    case NODO_DICC_ELEMENTO:
-    {
-        if(node->l){
-            pn(mv, node->l);
-            dbc(OP_PUSH, 255, 0, NULL);
-            #if DEPURAR_MV
-                printf("PUSH R255\n");
-            #endif
-        }
-        if(node->r){
-            pn(mv, node->r);
-            dbc(OP_PUSH, 255, 0, NULL);
-            #if DEPURAR_MV
-                printf("PUSH R255\n");
-            #endif
-        }
-        dbc(OP_PUSHDICTELEM, 0, 0, NULL);
-        #if DEPURAR_MV
-            printf("OP_PUSHDICTELEM\n");
-        #endif
-    }
-    break;
-    case NODO_DICC_ASIGNAR_ELEMENTO:
-    {
-        nodo_dicc_elem *elem = ((nodo_dicc_elem *)node);
-        if(elem->exp)
-        {
-            pn(mv, elem->exp);
-            dbc(OP_MOV, 3, 255, NULL);
-#if DEPURAR_MV
-            printf("MOV R3 R255\n");
-#endif
-        }
-        if(elem->id)
-        {
-            pn(mv, elem->llave);
-            dbc(OP_MOV, 4, 255, NULL);
-#if DEPURAR_MV
-            printf("MOV R4 R255\n");
-#endif
-            pn(mv, elem->id);
-            dbc(OP_DICTSETITEM, 255, 3, (void*)4);
-#if DEPURAR_MV
-            printf("DICTITEM R255 R3\n");
-#endif
-        }
-    }
-    break;
-    case NODO_DICC_OBTENER_ELEMENTO:
-    {
-        if(node->l){
-            pn(mv, node->l);
-            dbc(OP_MOV, 3, 255, NULL);
-            #if DEPURAR_MV
-            printf("MOV R3 R255\n");
-            #endif
-        }
-        if(node->r){
-            pn(mv, node->r);
-            dbc(OP_DICTGETITEM, 255, 3, NULL);
-            #if DEPURAR_MV
-            printf("MOV R255 R3\n");
-            #endif
-        }
-    }break;
-*/
+        }break;
     /*case NS:
       {
           dbc(OP_NS, 255, 0, NULL);
@@ -852,6 +730,6 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         printf("nodo_tipo:%i\n", node->tipo);
         return 0;
     }
-    // printf("i = %i\n", i);
+    //printf("i = %i\n", i);
     return i;
 }

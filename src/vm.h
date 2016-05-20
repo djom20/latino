@@ -37,12 +37,11 @@ typedef struct lat_mv lat_mv;
 #include "object.h"
 
 /**\brief Bandera para debuguear las instrucciones de la maquina virtual */
-#define DEPURAR_MV 1
+#define DEPURAR_MV 0
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
-{
-    OP_NOP,    /**< Indica No operacion */
+{    
     OP_PUSH,    /**< Inserta en la pila */
     OP_POP,    /**< Extrae de la pila */
     OP_GET,    /**< Obtiene un valor */
@@ -73,7 +72,9 @@ typedef enum lat_ins
     OP_PUSHDICTELEM, /**< Crea un objeto par (llave-valor) y lo agrega al diccionario de la pila */
     OP_DICTGETITEM,    /**< Obtiene un valor del diccionario */
     OP_DICTSETITEM,    /**< Asigna un valor del diccionario */
+    
     /* redefinicion de instrucciones */
+    NOP,    /**< Indica No operacion */
     LOAD_CONST,
     STORE_NAME,
     LOAD_NAME,
@@ -84,7 +85,15 @@ typedef enum lat_ins
     BINARY_SUBTRACT,        /**< Resta */
     BINARY_MULTIPLY,        /**< Multiplicacion */
     BINARY_FLOOR_DIVIDE,    /**< Division */
-    BINARY_MODULO           /**< Modulo */
+    BINARY_MODULO,          /**< Modulo */
+    COMPARE_OP_LT,          /**< Operador < */
+    COMPARE_OP_LTE,         /**< Operador <= */
+    COMPARE_OP_GT,          /**< Operador > */
+    COMPARE_OP_GTE,         /**< Operador >= */
+    COMPARE_OP_EQ,          /**< Operador == */
+    COMPARE_OP_NEQ,         /**< Operador != */
+    POP_JUMP_IF_FALSE,
+    POP_JUMP_IF_TRUE
 } lat_ins;
 
 

@@ -234,10 +234,12 @@ void lat_basurero_agregar(lat_mv *mv, lat_objeto* o)
     insert_list(mv->basurero_objetos, (void*)o);
 }
 
+
 void lat_basurero(lat_mv *mv)
 {
+    /*
     int i = 0;
-    /*for (i = 0; i < 256; i++)
+    for (i = 0; i < 256; i++)
     {
         if (((lat_objeto*)mv->registros[i]) != 0x0)
         {
@@ -246,7 +248,7 @@ void lat_basurero(lat_mv *mv)
                 ((lat_objeto*)mv->registros[i])->marcado = 2;
             }
         }
-    }*/
+    }
     list_node* c;
     lat_objeto* cur;
     for (c = mv->basurero_objetos->next; c != NULL; c = c->next)
@@ -274,7 +276,9 @@ void lat_basurero(lat_mv *mv)
         }
         //free(c);
     }
+    */
 }
+ 
 
 lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_params)
 {
@@ -758,7 +762,7 @@ void lat_menor_que(lat_mv *mv)
         lat_apilar(mv, strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) < 0 ? mv->objeto_cierto : mv->objeto_falso);
         return;
     }
-    lat_registrar_error("Intento de aplicar operador \"<\" en tipos invalidos");
+    lat_apilar(mv, mv->objeto_falso);
 }
 
 void lat_menor_igual(lat_mv *mv)
@@ -780,7 +784,7 @@ void lat_menor_igual(lat_mv *mv)
         lat_apilar(mv, strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) <= 0 ? mv->objeto_cierto : mv->objeto_falso);
         return;
     }
-    lat_registrar_error("Intento de aplicar operador \"<=\" en tipos invalidos");
+    lat_apilar(mv, mv->objeto_falso);
 }
 
 void lat_mayor_que(lat_mv *mv)
@@ -802,7 +806,7 @@ void lat_mayor_que(lat_mv *mv)
         lat_apilar(mv, strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) > 0 ? mv->objeto_cierto : mv->objeto_falso);
         return;
     }
-    lat_registrar_error("Intento de aplicar operador \">\" en tipos invalidos");
+    lat_apilar(mv, mv->objeto_falso);
 }
 
 void lat_mayor_igual(lat_mv *mv)
@@ -824,7 +828,7 @@ void lat_mayor_igual(lat_mv *mv)
         lat_apilar(mv, strcmp(lat_obtener_literal(a), lat_obtener_literal(b)) >= 0 ? mv->objeto_cierto : mv->objeto_falso);
         return;
     }
-    lat_registrar_error("Intento de aplicar operador \">=\" en tipos invalidos");
+    lat_apilar(mv, mv->objeto_falso);
 }
 
 void lat_y(lat_mv *mv)
@@ -921,22 +925,13 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         int pos;
         for (pos = 0, cur = inslist[pos]; cur.ins != RETURN_VALUE; cur = inslist[++pos])
         {
+            //printf("instruccion actual: %i\n", pos+1);
             switch (cur.ins)
             {
-            /*case OP_NOP:
+            case NOP:
+                printf("\nNOP\n");
                 break;
-            case OP_PUSH:
-                lat_apilar(mv, mv->registros[cur.a]);
-                break;
-            case OP_POP:
-                mv->registros[cur.a] = lat_desapilar(mv);
-                break;
-            case OP_GET:
-                mv->registros[cur.a] = lat_obtener_contexto_objeto(mv->registros[cur.b], mv->registros[cur.a]);
-                break;
-            case OP_SET:
-                lat_asignar_contexto_objeto(mv->registros[cur.b], lat_clonar_objeto(mv, ((lat_objeto*)cur.meta)), mv->registros[cur.a]);
-                break;
+            /*
             case OP_STORELIT:
                 mv->registros[cur.a] = ((lat_objeto*)cur.meta);
                 break;
@@ -1034,29 +1029,91 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
 
             /* redefinicion de instrucciones estilo Python*/
             case LOAD_CONST:
+                //lat_imprimir_lista(mv, mv->pila);
                 lat_apilar(mv, (lat_objeto*)cur.a);
                 break;
             case STORE_NAME:{
+                    //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto *contexto = lat_obtener_contexto(mv);
                     lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_desapilar(mv);
-                    lat_asignar_contexto_objeto(contexto, variable, valor);                    
+                    lat_asignar_contexto_objeto(contexto, variable, valor);
                 }
                 break;
             case LOAD_NAME: {
+                    //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto *contexto = lat_obtener_contexto(mv);
                     lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
                 }
+                break;            
+            case BINARY_ADD:
+                lat_sumar(mv);
                 break;
-            case MAKE_FUNCTION: {                    
-                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int*)cur.b);                    
+            case BINARY_SUBTRACT:
+                lat_restar(mv);
+                break;
+            case BINARY_MULTIPLY:
+                lat_multiplicar(mv);
+                break;
+            case BINARY_FLOOR_DIVIDE:
+                lat_dividir(mv);
+                break;
+            case BINARY_MODULO:
+                lat_modulo(mv);
+                break;
+            case COMPARE_OP_LT:
+                //lat_imprimir_lista(mv, mv->pila);
+                lat_menor_que(mv);
+                break;
+            case COMPARE_OP_LTE:
+                lat_menor_igual(mv);
+                break;
+            case COMPARE_OP_GT:
+                //printf("\nCOMPARE_OP_GT\n");
+                lat_mayor_que(mv);
+                break;
+            case COMPARE_OP_GTE:
+                lat_mayor_igual(mv);
+                break;
+            case COMPARE_OP_EQ:
+                lat_igualdad(mv);
+                break;
+            case COMPARE_OP_NEQ:
+                lat_diferente(mv);
+                break;
+            case POP_JUMP_IF_FALSE:
+                {
+                    //printf("\nPOP_JUMP_IF_FALSE\t");
+                    //lat_imprimir_lista(mv, mv->pila);
+                    lat_objeto* cond = lat_desapilar(mv);
+                    if(lat_obtener_logico(cond) == false){
+                        pos = (cur.a - 1);
+                        //printf("%i\n", pos);
+                    }
+                }
+                break;
+            case POP_JUMP_IF_TRUE:
+                {
+                    //printf("\nPOP_JUMP_IF_TRUE\t");
+                    //lat_imprimir_lista(mv, mv->pila);
+                    lat_objeto* cond = lat_desapilar(mv);
+                    if(lat_obtener_logico(cond) == true){
+                        pos = (cur.a - 1);
+                        //printf("%i\n", pos);
+                    }                                   
+                }
+                break;                
+            case MAKE_FUNCTION: {
+                    //lat_imprimir_lista(mv, mv->pila);
+                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int*)cur.b);
                     lat_apilar(mv, funcion_usuario);
                 }
                 break;
             case CALL_FUNCTION:
                 {
+                    //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto* funcion = lat_desapilar(mv);
                     lat_objeto* resultado = NULL;
                     if(funcion->tipo == T_FUNC){
@@ -1065,33 +1122,18 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                             resultado = lat_desapilar(mv);
                         }
                     }else{
-                        lat_llamar_funcion(mv, funcion);
-                        //resultado = lat_desapilar(mv);                        
-                    }                    
+                        lat_llamar_funcion(mv, funcion);                        
+                    }
                 }
                 break;
             case RETURN_VALUE:
                 {
-                    lat_objeto* res = lat_desapilar(mv);
-                    return res;
+                    //lat_objeto* res = lat_desapilar(mv);
+                    //return res;
+                    return;
                 }
                 break;
-            case BINARY_ADD:
-                lat_sumar(mv);                
-                break;
-            case BINARY_SUBTRACT:
-                lat_restar(mv);                
-                break;
-            case BINARY_MULTIPLY:
-                lat_multiplicar(mv);                
-                break;
-            case BINARY_FLOOR_DIVIDE:
-                lat_dividir(mv);                
-                break;
-            case BINARY_MODULO:
-                lat_modulo(mv);                
-                break;
-                
+
             }   //end switch
         }   //end for
         if(!mv->REPL)
