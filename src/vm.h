@@ -77,10 +77,14 @@ typedef enum lat_ins
     LOAD_CONST,
     STORE_NAME,
     LOAD_NAME,
-    CALL_FUNCTION,    /**< Llamada a una funcion */
-    MAKE_FUNCTION,    /**< Define una funcion */
-    RETURN_VALUE,    /**< Fin de la maquina virtual */
-    BINARY_ADD  /**< Suma binaria */
+    CALL_FUNCTION,          /**< Llamada a una funcion */
+    MAKE_FUNCTION,          /**< Define una funcion */
+    RETURN_VALUE,           /**< Fin de la maquina virtual */
+    BINARY_ADD,             /**< Suma */
+    BINARY_SUBTRACT,        /**< Resta */
+    BINARY_MULTIPLY,        /**< Multiplicacion */
+    BINARY_FLOOR_DIVIDE,    /**< Division */
+    BINARY_MODULO           /**< Modulo */
 } lat_ins;
 
 
@@ -109,7 +113,7 @@ struct lat_mv
     list_node* modulos;     /**< modulos importados en la MV */
     list_node* todos_objetos;     /**< objetos creados dinamicamente en la MV */
     list_node* basurero_objetos;     /**< objetos listos para liberar por el colector de basura */
-    lat_objeto* registros[256];    /**< Registros de la MV */
+    //lat_objeto* registros[256];    /**< Registros de la MV */
     lat_objeto* contexto_pila[256];   /**< Tabla hash para el contexto actual */
     lat_objeto* objeto_cierto;   /**< Valor logico verdadero */
     lat_objeto* objeto_falso;   /**< Valor logico falso */

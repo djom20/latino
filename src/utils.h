@@ -319,6 +319,14 @@ char *replace(char *str, char *orig, char *rep);
   */
 char *substring(const char* str, int beg, int n);
 
+/**\brief Valida si una cadena contiene una cadena de busqueda
+  *
+  *\param str: Cadena original
+  *\param search: Cadena a buscar  
+  *\return bool: true si se encuentra la cadena buscada
+  */
+bool contains(const char* str, const char* search);
+
 /**\brief Convierte a minusculas la cadena
   *
   *\param str: Cadena original

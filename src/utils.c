@@ -349,6 +349,11 @@ char *toLower(const char* str)
     return ret;
 }
 
+bool contains(const char* str, const char* search)
+{
+    return strstr(str, search) == NULL ? false : true;
+}
+
 char *toUpper(const char* str)
 {
     int i = 0;

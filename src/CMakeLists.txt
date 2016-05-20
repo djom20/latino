@@ -10,6 +10,7 @@ else(UNIX)
     if(CMAKE_COMPILER_IS_GNUCXX)
       add_definitions(-g -std=c11)
     endif()
+    set(CMAKE_LEGACY_CYGWIN_WIN32 0)
     set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS _CRT_SECURE_NO_WARNINGS)
 endif(UNIX)
 

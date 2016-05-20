@@ -41,11 +41,11 @@ void lat_leer(lat_mv *mv)
     ret =strtod(str, &ptr);
     if(strcmp(ptr, "") == 0)
     {
-        mv->registros[255] = lat_decimal_nuevo(mv, ret);
+        lat_apilar(mv, lat_decimal_nuevo(mv, ret));
     }
     else
     {
-        mv->registros[255] = lat_cadena_nueva(mv, parse_string(str, strlen(str)));
+        lat_apilar(mv, lat_cadena_nueva(mv, parse_string(str, strlen(str))));
     }
 }
 void lat_leer_archivo(lat_mv *mv)
@@ -71,7 +71,7 @@ void lat_leer_archivo(lat_mv *mv)
             printf("No se pudo asignar %d bytes de memoria\n", fsize);
         }
         buf[newSize] = '\0';
-        mv->registros[255] = lat_cadena_nueva(mv, buf);
+        lat_apilar(mv, lat_cadena_nueva(mv, buf));
     }
     else
     {

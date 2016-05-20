@@ -1,5 +1,1 @@
-funcion f(a,b)
-  retorno a*b
-fin
-
-f(2,3)
+escribir((-1) - (-1))

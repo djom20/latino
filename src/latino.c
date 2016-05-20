@@ -287,15 +287,12 @@ static void lat_repl(lat_mv *mv)
         tmp = lat_analizar_expresion(mv, buf, &status);
         if(tmp != NULL)
         {
-            lat_objeto *curexpr = nodo_analizar_arbol(mv, tmp);
-            lat_llamar_funcion(mv, curexpr);
-            /*
-            lat_objeto* resultado = lat_desapilar(mv);
-            if(resultado != NULL && (strstr(buf, "escribir") == NULL && strstr(buf, "imprimir") == NULL)){
+            lat_objeto* curexpr = nodo_analizar_arbol(mv, tmp);
+            lat_objeto* resultado = lat_llamar_funcion(mv, curexpr);
+            if(resultado->tipo != NULL && !contains(buf, "escribir") && !contains(buf, "imprimir")){
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
-            }
-            */
+            }             
             linenoiseHistoryAdd(replace(buf, "\n", ""));
             linenoiseHistorySave("history.txt");
         }
@@ -346,11 +343,7 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
         lat_objeto* mainFunc = nodo_analizar_arbol(mv, tree);
-        lat_objeto* resultado = lat_llamar_funcion(mv, mainFunc);
-        if(resultado->tipo != NULL){
-            lat_apilar(mv, resultado);
-            lat_imprimir(mv);
-        }
+        lat_llamar_funcion(mv, mainFunc);               
         if(file != NULL)
         {
             fclose(file);

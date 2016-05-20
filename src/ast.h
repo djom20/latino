@@ -245,7 +245,7 @@ ast *nodo_nuevo_cadena(const char *s, int num_linea, int num_columna);
   * \return ast: Un nodo AST
   *
   */
-ast *nodo_nuevo_operador(nodo_tipo nt, ast *l, ast *r);
+ast *nodo_nuevo(nodo_tipo nt, ast *l, ast *r);
 
 /** Nuevo nodo tipo Asignacion (var = "hola latino")
   *

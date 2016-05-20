@@ -33,112 +33,6 @@ THE SOFTWARE.
 #define fdbc(I, A, B, C) funcion_bcode[fi++] = lat_bc(I, A, B, C)
 #define fpn(mv, N) fi = nodo_analizar(mv, N, funcion_bcode, fi)
 
-ast *nodo_nuevo_operador(nodo_tipo nt, ast *l, ast *r)
-{
-    ast *a = (ast*)lat_asignar_memoria(sizeof(ast));
-    switch (nt)
-    {
-    case NODO_SUMA:
-    {
-        //a->l = nodo_nuevo_identificador("+", 1, 1);
-        a->tipo = NODO_SUMA;
-        a->l = l;
-        a->r = r;
-        a->valor = NULL;
-        return a;
-    }
-    break;
-    case NODO_MENOS_UNARIO:
-    case NODO_RESTA:
-    {
-        a->l = nodo_nuevo_identificador("-", 1, 1);
-    }
-    break;
-    case NODO_MULTIPLICACION:
-    {
-        a->l = nodo_nuevo_identificador("*", 1, 1);
-    }
-    break;
-    case NODO_DIVISION:
-    {
-        a->l = nodo_nuevo_identificador("/", 1, 1);
-    }
-    break;
-    case NODO_MODULO:
-    {
-        a->l = nodo_nuevo_identificador("%", 1, 1);
-    }
-    break;
-    case NODO_MAYOR_IGUAL:
-    {
-        a->l = nodo_nuevo_identificador(">=", 1, 1);
-    }
-    break;
-    case NODO_MAYOR_QUE:
-    {
-        a->l = nodo_nuevo_identificador(">", 1, 1);
-    }
-    break;
-    case NODO_MENOR_IGUAL:
-    {
-        a->l = nodo_nuevo_identificador("<=", 1, 1);
-    }
-    break;
-    case NODO_MENOR_QUE:
-    {
-        a->l = nodo_nuevo_identificador("<", 1, 1);
-    }
-    break;
-    case NODO_DESIGUALDAD:
-    {
-        a->l = nodo_nuevo_identificador("!=", 1, 1);
-    }
-    break;
-    case NODO_IGUALDAD:
-    {
-        a->l = nodo_nuevo_identificador("==", 1, 1);
-    }
-    break;
-    case NODO_NEGACION:
-    {
-        a->l = nodo_nuevo_identificador("!", 1, 1);
-    }
-    break;
-    case NODO_Y:
-    {
-        a->l = nodo_nuevo_identificador("&&", 1, 1);
-    }
-    break;
-    case NODO_O:
-    {
-        a->l = nodo_nuevo_identificador("||", 1, 1);
-    }
-    break;
-    case NODO_CONCATENAR:
-    {
-        a->l = nodo_nuevo_identificador(".", 1, 1);
-    }
-    break;
-    default:
-        break;
-    }
-    if (nt == NODO_MENOS_UNARIO)
-    {
-        a->r = nodo_nuevo(NODO_FUNCION_ARGUMENTOS, nodo_nuevo_entero(0, 1, 1), l);
-    }
-    else if (nt == NODO_NEGACION)
-    {
-        a->r = nodo_nuevo(NODO_FUNCION_ARGUMENTOS, NULL, l);
-    }
-    else
-    {
-        a->r = nodo_nuevo(NODO_FUNCION_ARGUMENTOS, l, r);
-    }
-    a->tipo = NODO_FUNCION_LLAMADA;
-    a->valor = NULL;
-    return a;
-}
-
 ast *nodo_nuevo(nodo_tipo nt, ast *l, ast *r)
 {
     ast *a = (ast*)lat_asignar_memoria(sizeof(ast));
@@ -713,7 +607,58 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
 #if DEPURAR_MV
         printf("BINARY_ADD\n");
 #endif
-
+        }break;
+    case NODO_RESTA:
+        {
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(BINARY_SUBTRACT, 0, 0, NULL);
+#if DEPURAR_MV
+        printf("BINARY_SUBTRACT\n");
+#endif
+        }break;
+    case NODO_MULTIPLICACION:
+        {
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(BINARY_MULTIPLY, 0, 0, NULL);
+#if DEPURAR_MV
+        printf("BINARY_MULTIPLY\n");
+#endif
+        }break;
+    case NODO_DIVISION:
+        {
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(BINARY_FLOOR_DIVIDE, 0, 0, NULL);
+#if DEPURAR_MV
+        printf("BINARY_FLOOR_DIVIDE\n");
+#endif
+        }break;
+    case NODO_MODULO:
+        {
+            if(node->l){
+                pn(mv, node->l);
+            }
+            if(node->r){
+                pn(mv, node->r);
+            }
+            dbc(BINARY_MODULO, 0, 0, NULL);
+#if DEPURAR_MV
+        printf("BINARY_MODULO\n");
+#endif
         }break;
 /*
     case NODO_LISTA:

@@ -120,44 +120,44 @@ constant_expression:
 unary_expression:
 	  TIDENTIFIER OP_INCR { $$ = nodo_nuevo(NODO_INCREMENTO, $1, NULL); }
 	| TIDENTIFIER OP_DECR { $$ = nodo_nuevo(NODO_DECREMENTO, $1, NULL); }
-    | '-' expression %prec '*' { $$ = nodo_nuevo_operador(NODO_MENOS_UNARIO, $2, NULL); }
+    | '-' expression %prec '*' { $$ = nodo_nuevo(NODO_MENOS_UNARIO, $2, NULL); }
     ;
 
 
 multiplicative_expression
-    : expression '*' expression { $$ = nodo_nuevo_operador(NODO_MULTIPLICACION, $1, $3); }
-    | expression '/' expression { $$ = nodo_nuevo_operador(NODO_DIVISION, $1, $3); }
-    | expression '%' expression { $$ = nodo_nuevo_operador(NODO_MODULO, $1, $3); }
+    : expression '*' expression { $$ = nodo_nuevo(NODO_MULTIPLICACION, $1, $3); }
+    | expression '/' expression { $$ = nodo_nuevo(NODO_DIVISION, $1, $3); }
+    | expression '%' expression { $$ = nodo_nuevo(NODO_MODULO, $1, $3); }
     ;
 
 additive_expression
-    : expression '+' expression { $$ = nodo_nuevo_operador(NODO_SUMA, $1, $3); }
-    | expression '-' expression { $$ = nodo_nuevo_operador(NODO_RESTA, $1, $3); }
+    : expression '+' expression { $$ = nodo_nuevo(NODO_SUMA, $1, $3); }
+    | expression '-' expression { $$ = nodo_nuevo(NODO_RESTA, $1, $3); }
     ;
 
 relational_expression
-    : expression OP_GT expression { $$ = nodo_nuevo_operador(NODO_MAYOR_QUE, $1, $3); }
-    | expression OP_LT expression { $$ = nodo_nuevo_operador(NODO_MENOR_QUE, $1, $3); }
-    | expression OP_GE expression { $$ = nodo_nuevo_operador(NODO_MAYOR_IGUAL, $1, $3); }
-    | expression OP_LE expression { $$ = nodo_nuevo_operador(NODO_MENOR_IGUAL, $1, $3); }
+    : expression OP_GT expression { $$ = nodo_nuevo(NODO_MAYOR_QUE, $1, $3); }
+    | expression OP_LT expression { $$ = nodo_nuevo(NODO_MENOR_QUE, $1, $3); }
+    | expression OP_GE expression { $$ = nodo_nuevo(NODO_MAYOR_IGUAL, $1, $3); }
+    | expression OP_LE expression { $$ = nodo_nuevo(NODO_MENOR_IGUAL, $1, $3); }
     ;
 
 equality_expression
-    : expression OP_NEQ expression { $$ = nodo_nuevo_operador(NODO_DESIGUALDAD, $1, $3); }
-    | expression OP_EQ expression { $$ = nodo_nuevo_operador(NODO_IGUALDAD, $1, $3); }
+    : expression OP_NEQ expression { $$ = nodo_nuevo(NODO_DESIGUALDAD, $1, $3); }
+    | expression OP_EQ expression { $$ = nodo_nuevo(NODO_IGUALDAD, $1, $3); }
     ;
 
 logical_not_expression
-    : '!' expression %prec '*' { $$ = nodo_nuevo_operador(NODO_NEGACION, $2, NULL); }
+    : '!' expression %prec '*' { $$ = nodo_nuevo(NODO_NEGACION, $2, NULL); }
     ;
 
 logical_and_expression
-    : expression OP_AND expression { $$ = nodo_nuevo_operador(NODO_Y, $1, $3); }
+    : expression OP_AND expression { $$ = nodo_nuevo(NODO_Y, $1, $3); }
 	;
 
 logical_or_expression
     : logical_and_expression
-	| expression OP_OR expression { $$ = nodo_nuevo_operador(NODO_O, $1, $3); }
+	| expression OP_OR expression { $$ = nodo_nuevo(NODO_O, $1, $3); }
 	;
 
 ternary_expression
@@ -172,7 +172,7 @@ ternary_expression
 	;
 
 concat_expression
-    : expression OP_CONCAT expression { $$ = nodo_nuevo_operador(NODO_CONCATENAR, $1, $3); }
+    : expression OP_CONCAT expression { $$ = nodo_nuevo(NODO_CONCATENAR, $1, $3); }
     ;
 
 program
@@ -218,7 +218,7 @@ declaration:
     | TIDENTIFIER '[' TIDENTIFIER ']' '=' expression { $$ = nodo_nuevo_asignacion_lista_elem($6, $1, $3); }
     | TIDENTIFIER '[' TLIT ']' '=' expression { $$ = nodo_nuevo_asignacion_dicc_elem($6, $1, $3); }
     | TIDENTIFIER '[' TSTRING ']' '=' expression { $$ = nodo_nuevo_asignacion_dicc_elem($6, $1, $3); }
-    | TIDENTIFIER OP_CONCAT_IGUAL expression { $$ = nodo_nuevo_asignacion((nodo_nuevo_operador(NODO_CONCATENAR, $1, $3)), $1); }
+    | TIDENTIFIER OP_CONCAT_IGUAL expression { $$ = nodo_nuevo_asignacion((nodo_nuevo(NODO_CONCATENAR, $1, $3)), $1); }
     | TCONSTANT '=' constant_expression { $$ = nodo_nuevo_asignacion($3, $1); }
     | unary_expression { $$ = $1; }
     ;
