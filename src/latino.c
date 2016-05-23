@@ -160,105 +160,72 @@ static int leer_linea(lat_mv *mv, char* buffer){
 }
 
 static void completion(const char *buf, linenoiseCompletions *lc) {
-    if (startsWith(buf, "esc")) {
+    if (startsWith(buf, "esc"))
         linenoiseAddCompletion(lc,"escribir");
-    }
-    if (startsWith(buf, "imp")) {
+    if (startsWith(buf, "imp"))
         linenoiseAddCompletion(lc,"imprimir");
-    }
-    if (startsWith(buf, "eje")) {
+    if (startsWith(buf, "eje"))
         linenoiseAddCompletion(lc,"ejecutar");
-    }
-    if (startsWith(buf, "ejea")) {
+    if (startsWith(buf, "ejea"))
         linenoiseAddCompletion(lc,"ejecutar_archivo");
-    }
-    if (startsWith(buf, "fun")) {
+    if (startsWith(buf, "fun"))
         linenoiseAddCompletion(lc,"funcion");
-    }
-    if (startsWith(buf, "com")) {
+    if (startsWith(buf, "com"))
         linenoiseAddCompletion(lc,"comparar");
-    }
-    if (startsWith(buf, "con")) {
+    if (startsWith(buf, "con"))
         linenoiseAddCompletion(lc,"concatenar");
-    }
-    if (startsWith(buf, "cont")) {
+    if (startsWith(buf, "cont"))
         linenoiseAddCompletion(lc,"contiene");
-    }
-    if (startsWith(buf, "cop")) {
+    if (startsWith(buf, "cop"))
         linenoiseAddCompletion(lc,"copiar");
-    }
-    if (startsWith(buf, "ter")) {
+    if (startsWith(buf, "ter"))
         linenoiseAddCompletion(lc,"termina_con");
-    }
-    if (startsWith(buf, "es_")) {
+    if (startsWith(buf, "es_"))
         linenoiseAddCompletion(lc,"es_igual");
-    }
-    if (startsWith(buf, "ind")) {
+    if (startsWith(buf, "ind"))
         linenoiseAddCompletion(lc,"indice");
-    }
-    if (startsWith(buf, "ins")) {
+    if (startsWith(buf, "ins"))
         linenoiseAddCompletion(lc,"insertar");
-    }
-    if (startsWith(buf, "ult")) {
+    if (startsWith(buf, "ult"))
         linenoiseAddCompletion(lc,"ultimo_indice");
-    }
-    if (startsWith(buf, "reli")) {
+    if (startsWith(buf, "reli"))
         linenoiseAddCompletion(lc,"rellenar_izquierda");
-    }
-    if (startsWith(buf, "reld")) {
+    if (startsWith(buf, "reld"))
         linenoiseAddCompletion(lc,"rellenar_derecha");
-    }
-    if (startsWith(buf, "eli")) {
+    if (startsWith(buf, "eli"))
         linenoiseAddCompletion(lc,"eliminar");
-    }
-    if (startsWith(buf, "est")) {
+    if (startsWith(buf, "est"))
         linenoiseAddCompletion(lc,"esta_vacia");
-    }
-    if (startsWith(buf, "lon")) {
+    if (startsWith(buf, "lon"))
         linenoiseAddCompletion(lc,"longitud");
-    }
-    if (startsWith(buf, "ree")) {
+    if (startsWith(buf, "ree"))
         linenoiseAddCompletion(lc,"reemplazar");
-    }
-    if (startsWith(buf, "emp")) {
+    if (startsWith(buf, "emp"))
         linenoiseAddCompletion(lc,"empieza_con");
-    }
-    if (startsWith(buf, "sub")) {
+    if (startsWith(buf, "sub"))
         linenoiseAddCompletion(lc,"subcadena");
-    }
-    if (startsWith(buf, "min")) {
+    if (startsWith(buf, "min"))
         linenoiseAddCompletion(lc,"minusculas");
-    }
-    if (startsWith(buf, "may")) {
+    if (startsWith(buf, "may"))
         linenoiseAddCompletion(lc,"mayusculas");
-    }
-    if (startsWith(buf, "qui")) {
+    if (startsWith(buf, "qui"))
         linenoiseAddCompletion(lc,"quitar_espacios");
-    }
-    if (startsWith(buf, "lee")) {
+    if (startsWith(buf, "lee"))
         linenoiseAddCompletion(lc,"leer");
-    }
-    if (startsWith(buf, "esca")) {
+    if (startsWith(buf, "esca"))
         linenoiseAddCompletion(lc,"escribir_archivo");
-    }
-    if (startsWith(buf, "tip")) {
+    if (startsWith(buf, "tip"))
         linenoiseAddCompletion(lc,"tipo");
-    }
-    if (startsWith(buf, "log")) {
+    if (startsWith(buf, "log"))
         linenoiseAddCompletion(lc,"logico");
-    }
-    if (startsWith(buf, "ent")) {
+    if (startsWith(buf, "ent"))
         linenoiseAddCompletion(lc,"entero");
-    }
-    if (startsWith(buf, "dec")) {
+    if (startsWith(buf, "dec"))
         linenoiseAddCompletion(lc,"decimal");
-    }
-    if (startsWith(buf, "cad")) {
+    if (startsWith(buf, "cad"))
         linenoiseAddCompletion(lc,"cadena");
-    }
-    if (startsWith(buf, "sal")) {
+    if (startsWith(buf, "sal"))
         linenoiseAddCompletion(lc,"salir");
-    }
 }
 
 /*
@@ -292,7 +259,7 @@ static void lat_repl(lat_mv *mv)
             if(resultado->tipo != NULL && !contains(buf, "escribir") && !contains(buf, "imprimir")){
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
-            }             
+            }
             linenoiseHistoryAdd(replace(buf, "\n", ""));
             linenoiseHistorySave("history.txt");
         }
@@ -343,7 +310,7 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
         lat_objeto* mainFunc = nodo_analizar_arbol(mv, tree);
-        lat_llamar_funcion(mv, mainFunc);               
+        lat_llamar_funcion(mv, mainFunc);
         if(file != NULL)
         {
             fclose(file);

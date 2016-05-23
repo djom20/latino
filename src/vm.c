@@ -278,7 +278,7 @@ void lat_basurero(lat_mv *mv)
     }
     */
 }
- 
+
 
 lat_objeto* lat_definir_funcion(lat_mv *mv, lat_bytecode* inslist, int num_params)
 {
@@ -837,7 +837,7 @@ void lat_y(lat_mv *mv)
     lat_objeto* a = lat_desapilar(mv);
     if ((b->tipo != T_BOOL && b->tipo != T_INT) || (a->tipo != T_BOOL && a->tipo != T_INT))
     {
-        lat_registrar_error("Intento de aplicar operador \"y\" en tipos invalidos");
+        lat_registrar_error("Intento de aplicar operador \"&&\" en tipos invalidos");
     }
     lat_apilar(mv, (lat_obtener_logico(a) && lat_obtener_logico(b)) == true ? mv->objeto_cierto : mv->objeto_falso);
 }
@@ -848,7 +848,7 @@ void lat_o(lat_mv *mv)
     lat_objeto* a = lat_desapilar(mv);
     if ((b->tipo != T_BOOL && b->tipo != T_INT) || (a->tipo != T_BOOL && a->tipo != T_INT))
     {
-        lat_registrar_error("Intento de aplicar operador \"y\" en tipos invalidos");
+        lat_registrar_error("Intento de aplicar operador \"||\" en tipos invalidos");
     }
     lat_apilar(mv, (lat_obtener_logico(a) || lat_obtener_logico(b)) == true ? mv->objeto_cierto : mv->objeto_falso);
 }
@@ -1047,7 +1047,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
                 }
-                break;            
+                break;
             case BINARY_ADD:
                 lat_sumar(mv);
                 break;
@@ -1102,9 +1102,9 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     if(lat_obtener_logico(cond) == true){
                         pos = (cur.a - 1);
                         //printf("%i\n", pos);
-                    }                                   
+                    }
                 }
-                break;                
+                break;
             case MAKE_FUNCTION: {
                     //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int*)cur.b);
@@ -1122,7 +1122,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                             resultado = lat_desapilar(mv);
                         }
                     }else{
-                        lat_llamar_funcion(mv, funcion);                        
+                        lat_llamar_funcion(mv, funcion);
                     }
                 }
                 break;

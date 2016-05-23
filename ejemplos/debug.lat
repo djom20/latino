@@ -1,4 +1,4 @@
-i=5
+i=11
 si i < 10
     escribir("es verdadero")
 sino
