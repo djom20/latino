@@ -1,5 +1,5 @@
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -std=c11")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -Wall -std=c11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -std=c11")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g -std=c11")
 set(CMAKE_VERBOSE_MAKEFILE true)
 
 if(UNIX)

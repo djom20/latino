@@ -95,10 +95,6 @@ EXP ([Ee][-+]?[0-9]+)
 "retorno"   { return KRETURN; }
 "incluir"   { return KINCLUDE; }
 
- /*"elegir"    { return KSWITCH; }
- "caso"      { return KCASE; }
- "defecto"   { return KDEFAULT; }*/
-
  /* names */
 [_A-Z][_A-Z0-9]*       { yylval->node = nodo_nuevo_constante(yytext, yylloc->first_line, yylloc->first_column); return TCONSTANT; }
 [_a-zA-Z][_a-zA-Z0-9]* { yylval->node = nodo_nuevo_identificador(yytext, yylloc->first_line, yylloc->first_column); return TIDENTIFIER; }

@@ -1130,7 +1130,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                 {
                     //lat_objeto* res = lat_desapilar(mv);
                     //return res;
-                    return;
+                    return NULL;
                 }
                 break;
 

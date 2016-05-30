@@ -37,7 +37,7 @@ typedef struct lat_mv lat_mv;
 #include "object.h"
 
 /**\brief Bandera para debuguear las instrucciones de la maquina virtual */
-#define DEPURAR_MV 0
+#define DEPURAR_MV 1
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
@@ -122,7 +122,7 @@ struct lat_mv
     list_node* modulos;     /**< modulos importados en la MV */
     list_node* todos_objetos;     /**< objetos creados dinamicamente en la MV */
     list_node* basurero_objetos;     /**< objetos listos para liberar por el colector de basura */
-    //lat_objeto* registros[256];    /**< Registros de la MV */
+    lat_objeto* registros[8];    /**< Registros auxiliares de la MV */
     lat_objeto* contexto_pila[256];   /**< Tabla hash para el contexto actual */
     lat_objeto* objeto_cierto;   /**< Valor logico verdadero */
     lat_objeto* objeto_falso;   /**< Valor logico falso */

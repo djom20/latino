@@ -5,7 +5,7 @@ fin
 
 #asignado a una variable, tambien se acepta la palabra clave "cierto"
 escribir("---------------------------------------------------------------------")
-escribir("se agrega la palabra clave cierto para referirse a un valor verdadero")
+escribir("NUEVO: Se agrega la palabra clave cierto para referirse a un valor verdadero")
 escribir("---------------------------------------------------------------------")
 b = cierto
 si b
@@ -24,12 +24,12 @@ fin
 #si anidado
 i = 10
 si(i == 0)
-    escribir(0)
+    escribir("es igual a cero")
 sino
     si(i > 0)
-        escribir(1)
+        escribir("es positivo")
     sino
-        escribir(-1)
+        escribir("es negativo")
     fin
 fin
 
@@ -38,7 +38,7 @@ si(verdadero)
 fin
 
 escribir("----------------------------------------------------")
-escribir("condicion sin parentesis permitida")
+escribir("NUEVO: Condicion sin parentesis permitida")
 escribir("----------------------------------------------------")
 num = 10
 si num < 0

@@ -240,9 +240,8 @@ static char *hints(const char *buf, int *color, int *bold) {
 */
 
 static void lat_repl(lat_mv *mv)
-{
-    char* input = "";
-    char* buf = lat_asignar_memoria(MAX_STR_INTERN);
+{    
+    char* buf = (char*)lat_asignar_memoria(MAX_STR_INTERN);
     ast* tmp = NULL;
     int status;
     mv->REPL = true;

@@ -54,11 +54,6 @@ int yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
     KBOOL
     KRETURN
     KINCLUDE
-    /*
-    KSWITCH
-    KCASE
-    KDEFAULT
-    */
 
 %token
     OP_GT
@@ -192,7 +187,6 @@ statement_list
     }
     ;
 
-    /*| labeled_statement { $$ = $1; }*/
 
 statement: /* empty */ { $$ = NULL; }
     | include_declaration { $$ = $1; }

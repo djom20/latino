@@ -1,6 +1,6 @@
 #ejemplos de funciones matematicas
 escribir("ingresa un numero decimal")
-x = decimal(leer())
+x = leer()  #convierte a decimal en automatico si son numeros
 escribir("seno de x: " . seno(x))
 escribir("coseno de x: " . coseno(x))
 escribir("tangente de x: " . tangente(x))

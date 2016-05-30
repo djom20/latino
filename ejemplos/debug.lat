@@ -1,6 +1,6 @@
-i=11
-si i < 10
-    escribir("es verdadero")
+i = 10
+si i < 0
+    escribir("es negativo")
 sino
-    escribir("es falso")
+    escribir("es positivo")
 fin

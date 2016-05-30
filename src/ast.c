@@ -447,6 +447,17 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         }
     }
     break;
+    case NODO_MIENTRAS:
+    {
+        temp[0] = i;
+        pn(mv, node->l);
+        temp[1] = i;
+        dbc(NOP, NULL, NULL, NULL);
+        pn(mv, node->r);
+        dbc(POP_JUMP_IF_FALSE, (void*)temp[0], NULL, NULL);
+        //bcode[temp[1]] = lat_bc(POP_JUMP_IF_FALSE, i, NULL, NULL);
+    }
+    break;
     
     /*
     case NODO_MIENTRAS:
