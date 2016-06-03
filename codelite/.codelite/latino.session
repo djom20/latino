@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Session Name="C:\src\latino\codelite\latino.workspace">
-  <int Value="0" Name="m_selectedTab"/>
+  <int Value="1" Name="m_selectedTab"/>
   <wxString Value="C:\src\latino\codelite\latino.workspace" Name="m_workspaceName"/>
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="C:\src\latino\src\ast.h" Name="FileName"/>
-      <int Value="54" Name="FirstVisibleLine"/>
-      <int Value="42" Name="CurrentLine"/>
+      <int Value="339" Name="FirstVisibleLine"/>
+      <int Value="116" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\ast.c" Name="FileName"/>
+      <int Value="246" Name="FirstVisibleLine"/>
+      <int Value="43" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
       <IntVector Name="CollapsedFolds"/>
     </TabInfo>

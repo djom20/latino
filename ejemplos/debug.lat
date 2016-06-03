@@ -1,6 +1,11 @@
-i = 10
+i=0
 si i < 0
     escribir("es negativo")
 sino
     escribir("es positivo")
 fin
+#i = 0
+#mientras i < 10
+#    escribir(i)
+#    i = i + 1
+#fin

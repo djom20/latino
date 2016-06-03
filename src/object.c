@@ -259,6 +259,8 @@ void lat_eliminar_objeto(lat_mv *mv, lat_objeto* o)
     case T_FUNC:
     case T_CFUNC:
         return;
+    case T_DICT_ITEM:
+        return;
     case T_STRUCT:
         return;
         break;

@@ -200,7 +200,7 @@ statement: /* empty */ { $$ = NULL; }
     ;
 
 include_declaration:
-    KINCLUDE TSTRING { $$ = nodo_nuevo_incluir($2); }
+    KINCLUDE '(' TSTRING ')' { $$ = nodo_nuevo_incluir($3); }
     ;
 
 declaration:

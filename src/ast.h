@@ -113,7 +113,7 @@ typedef enum {
   NODO_INCLUIR  /**< Nodo para incluir codigo de otro archivo */
 } nodo_tipo;
 
-/** \brief Nodos en arbol abstacto de sintaxis (abstract syntax tree).
+/** \brief Nodos en arbol abstacto de sintaxis (Abstract Syntax Tree).
   *
   * Todos los nodos son inicializados con un tipo de nodo */
 typedef struct ast {
@@ -138,9 +138,9 @@ typedef union YYSTYPE {
   * si (condicion) [sentencias] sino [sentencias] fin */
 typedef struct {
   nodo_tipo tipo;
-  struct ast *cond; /**< Condicion */
-  struct ast *th;   /**< Instrucciones que se ejecutan si la condicion es verdadera */
-  struct ast *el;   /**< Instrucciones que se ejecutan si la condicion es falsa */
+  struct ast *condicion; /**< Condicion */
+  struct ast *entonces;   /**< Instrucciones que se ejecutan si la condicion es verdadera */
+  struct ast *sino;   /**< Instrucciones que se ejecutan si la condicion es falsa */
 } nodo_si;
 
 /** \brief nodo para representar una funcion.

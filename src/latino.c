@@ -309,6 +309,7 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
         lat_objeto* mainFunc = nodo_analizar_arbol(mv, tree);
+        //printf("---------------------------------------------\n");
         lat_llamar_funcion(mv, mainFunc);
         if(file != NULL)
         {

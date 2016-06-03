@@ -2,16 +2,17 @@
 si(verdadero)
     escribir("es verdadero")
 fin
+#Salida: es verdadero
 
 #asignado a una variable, tambien se acepta la palabra clave "cierto"
-escribir("---------------------------------------------------------------------")
-escribir("NUEVO: Se agrega la palabra clave cierto para referirse a un valor verdadero")
-escribir("---------------------------------------------------------------------")
+#escribir("---------------------------------------------------------------------")
+#escribir("NUEVO: Se agrega la palabra clave cierto para referirse a un valor verdadero")
+#escribir("---------------------------------------------------------------------")
 b = cierto
 si b
     escribir("cierto tambien es verdadero")
 fin
-escribir("---------------------------------------------------------------------")
+#Salida: cierto tambien es verdadero
 
 #si-sino
 b = falso
@@ -20,6 +21,7 @@ si(b)
 sino
     escribir("falsedad")
 fin
+#Salida: falsedad
 
 #si anidado
 i = 10
@@ -32,18 +34,15 @@ sino
         escribir("es negativo")
     fin
 fin
+#Salida: es positivo
 
-si(verdadero)
-    escribir("hola latino")
-fin
-
-escribir("----------------------------------------------------")
-escribir("NUEVO: Condicion sin parentesis permitida")
-escribir("----------------------------------------------------")
+#escribir("----------------------------------------------------")
+#escribir("NUEVO: Condicion sin parentesis permitida")
+#escribir("----------------------------------------------------")
 num = 10
 si num < 0
     escribir("es negativo")
 sino
     escribir("es positivo")
 fin
-escribir("----------------------------------------------------")
+#Salida: es positivo

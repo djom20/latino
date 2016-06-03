@@ -37,7 +37,7 @@ typedef struct lat_mv lat_mv;
 #include "object.h"
 
 /**\brief Bandera para debuguear las instrucciones de la maquina virtual */
-#define DEPURAR_MV 1
+#define DEPURAR_MV 0
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
@@ -92,8 +92,9 @@ typedef enum lat_ins
     COMPARE_OP_GTE,         /**< Operador >= */
     COMPARE_OP_EQ,          /**< Operador == */
     COMPARE_OP_NEQ,         /**< Operador != */
-    POP_JUMP_IF_FALSE,
-    POP_JUMP_IF_TRUE
+    POP_JUMP_IF_FALSE,    
+    POP_JUMP_IF_TRUE,
+    JUMP_FORWARD
 } lat_ins;
 
 

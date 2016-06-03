@@ -524,6 +524,7 @@ void lat_imprimir_diccionario(lat_mv *mv, hash_map* d)
     fprintf(stdout, "%s", " ]");
 }
 
+
 void lat_ejecutar(lat_mv *mv)
 {
     int status;
@@ -531,6 +532,7 @@ void lat_ejecutar(lat_mv *mv)
     lat_llamar_funcion(mv, func);
     //lat_apilar(mv, mv->registros[255]);
 }
+
 
 void lat_ejecutar_archivo(lat_mv *mv)
 {
@@ -557,6 +559,7 @@ void lat_ejecutar_archivo(lat_mv *mv)
         //lat_apilar(mv, mv->registros[255]);
     }
 }
+
 
 void lat_clonar(lat_mv *mv)
 {
@@ -925,112 +928,17 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         int pos;
         for (pos = 0, cur = inslist[pos]; cur.ins != RETURN_VALUE; cur = inslist[++pos])
         {
-            //printf("instruccion actual: %i\n", pos+1);
-            switch (cur.ins)
-            {
-            case NOP:
-                printf("\nNOP\n");
-                break;
-            /*
-            case OP_STORELIT:
-                mv->registros[cur.a] = ((lat_objeto*)cur.meta);
-                break;
-            case OP_STOREINT:
-                mv->registros[cur.a] = ((lat_objeto*)cur.meta);
-                break;
-            case OP_STOREDOUBLE:
-                mv->registros[cur.a] = ((lat_objeto*)cur.meta);
-                break;
-            case OP_STORESTR:
-            {
-                mv->registros[cur.a] = ((lat_objeto*)cur.meta);
-            }
-            break;
-            case OP_STOREBOOL:
-                mv->registros[cur.a] = ((lat_objeto*)cur.meta);
-                break;
-
-            case OP_STORELIST:
-                mv->registros[cur.a] = lat_lista_nueva(mv, lat_crear_lista());
-                break;
-
-            case OP_PUSHLIST:
-                lat_apilar_lista(mv->registros[cur.a], mv->registros[cur.b]);
-                break;
-            case OP_POPLIST:
-                //TODO: Pendiente
-                //mv->registros[cur.a] = lat_desapilar_lista(mv->registros[cur.b]);
-                break;
-            case OP_LISTGETITEM:
-            {
-                lat_objeto *l = mv->registros[cur.a];
-                lat_objeto *pos = mv->registros[cur.b];
-                mv->registros[cur.a] = lista_obtener_elemento(l->datos.lista, pos->datos.entero);
-            }
-            break;
-            case OP_LISTSETITEM:
-            {
-                lat_objeto *l = mv->registros[cur.a];
-                lat_objeto *pos = mv->registros[(int)cur.meta];
-                if(pos->tipo != T_INT)
-                {
-                    lat_registrar_error("%s", "la posicion de la lista no es un entero");
-                }
-                lista_modificar_elemento(l->datos.lista, (lat_objeto*)mv->registros[cur.b], pos->datos.entero);
-            }
-            break;
-            case OP_STOREDICT:
-                //TODO: Pendiente
-                //mv->registros[cur.a] = lat_lista_nueva(mv, make_dict());
-                break;
-            case OP_PUSHDICT:
-                //TODO: Pendiente
-                //lat_push_dict(mv->registros[cur.a], mv->registros[cur.b]);
-                break;
-            case OP_POPDICT:
-                //TODO: Pendiente
-                //mv->registros[cur.a] = lat_pop_dict(mv->registros[cur.b]);
-                break;
-            case OP_MOV:
-                mv->registros[cur.a] = mv->registros[cur.b];
-                break;
-            case OP_GLOBALNS:
-                mv->registros[cur.a] = mv->contexto_pila[0];
-                break;
-            case OP_LOCALNS:
-                mv->registros[cur.a] = lat_obtener_contexto(mv);
-                break;
-            case OP_NS:
-                mv->registros[cur.a] = lat_clonar_objeto(mv, lat_obtener_contexto(mv));
-                lat_apilar_contexto_predefinido(mv, mv->registros[cur.a]);
-                break;
-            case RETURN_VALUENS:
-                mv->registros[cur.a] = lat_desapilar_contexto_predefinido(mv);
-                break;
-            case OP_JMP:
-                pos = cur.a - 1;
-                break;
-            case OP_JMPIF:
-                if (lat_obtener_logico(mv->registros[cur.b]))
-                {
-                    pos = cur.a - 1;
-                }
-                break;
-            case OP_NOT:
-                mv->registros[cur.a] = lat_obtener_logico(mv->registros[cur.a]) == true ? mv->objeto_falso : mv->objeto_cierto;
-                break;
-            case OP_INC:
-                ((lat_objeto*)mv->registros[cur.a])->datos.entero++;
-                break;
-            case OP_DEC:
-                ((lat_objeto*)mv->registros[cur.a])->datos.entero--;
-                break;
-            */
-
+            //printf("%i\t", pos);
+            switch ((int)cur.ins)
+            {                        
             /* redefinicion de instrucciones estilo Python*/
             case LOAD_CONST:
+            {
                 //lat_imprimir_lista(mv, mv->pila);
-                lat_apilar(mv, (lat_objeto*)cur.a);
+                lat_objeto *variable = (lat_objeto*)cur.a;
+                lat_apilar(mv, variable);
+                //printf("LOAD_CONST\n");                
+            }
                 break;
             case STORE_NAME:{
                     //lat_imprimir_lista(mv, mv->pila);
@@ -1038,14 +946,16 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                     lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_desapilar(mv);
                     lat_asignar_contexto_objeto(contexto, variable, valor);
+                    //printf("STORE_NAME %s\n", variable->datos.cadena);
                 }
                 break;
             case LOAD_NAME: {
-                    //lat_imprimir_lista(mv, mv->pila);
+                    //lat_imprimir_lista(mv, mv->pila);                    
                     lat_objeto *contexto = lat_obtener_contexto(mv);
                     lat_objeto *variable = (lat_objeto*)cur.a;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
+                    //printf("LOAD_NAME %s\n", variable->datos.cadena);
                 }
                 break;
             case BINARY_ADD:
@@ -1064,6 +974,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                 lat_modulo(mv);
                 break;
             case COMPARE_OP_LT:
+                //printf("COMPARE_OP_LT\n");
                 //lat_imprimir_lista(mv, mv->pila);
                 lat_menor_que(mv);
                 break;
@@ -1080,40 +991,48 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             case COMPARE_OP_EQ:
                 lat_igualdad(mv);
                 break;
-            case COMPARE_OP_NEQ:
+            case COMPARE_OP_NEQ:                
                 lat_diferente(mv);
+                break;
+            case NOP:
+                //printf("NOP\n");
+                break;
+            case JUMP_FORWARD:                
+                pos = ((int)cur.a - 1);                
+                //printf("JUMP_FORWARD %i\n", (int)cur.a);
                 break;
             case POP_JUMP_IF_FALSE:
                 {
-                    //printf("\nPOP_JUMP_IF_FALSE\t");
+                    //printf("POP_JUMP_IF_FALSE\n");
                     //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto* cond = lat_desapilar(mv);
                     if(lat_obtener_logico(cond) == false){
-                        pos = (cur.a - 1);
-                        //printf("%i\n", pos);
+                        pos = ((int)cur.a - 1);
                     }
+                    //printf("POP_JUMP_IF_FALSE\t%i\n", (int)cur.a);
                 }
                 break;
             case POP_JUMP_IF_TRUE:
-                {
-                    //printf("\nPOP_JUMP_IF_TRUE\t");
+                {                    
                     //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto* cond = lat_desapilar(mv);
                     if(lat_obtener_logico(cond) == true){
-                        pos = (cur.a - 1);
-                        //printf("%i\n", pos);
+                        pos = ((int)cur.a - 1);                        
                     }
+                    //printf("POP_JUMP_IF_TRUE\t%i\n", (int)cur.a);
                 }
                 break;
             case MAKE_FUNCTION: {
+                    //printf("MAKE_FUNCTION\n");
                     //lat_imprimir_lista(mv, mv->pila);
-                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int*)cur.b);
+                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int)cur.b);
                     lat_apilar(mv, funcion_usuario);
                 }
                 break;
             case CALL_FUNCTION:
                 {
                     //lat_imprimir_lista(mv, mv->pila);
+                    //printf("CALL_FUNCTION\n");
                     lat_objeto* funcion = lat_desapilar(mv);
                     lat_objeto* resultado = NULL;
                     if(funcion->tipo == T_FUNC){
@@ -1128,8 +1047,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                 break;
             case RETURN_VALUE:
                 {
-                    //lat_objeto* res = lat_desapilar(mv);
-                    //return res;
+                    //printf("RETURN_VALUE\t");
                     return NULL;
                 }
                 break;
