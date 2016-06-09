@@ -1057,17 +1057,17 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         if(!mv->REPL)
         {
             lat_desapilar_contexto(mv);
-        }
+        }        
     }
     else if (func->tipo == T_CFUNC)
     {
         ((void (*)(lat_mv*))(func->datos.funcion))(mv);
     }
     else
-    {
-        debug("func->type: %d", func->tipo);
+    {        
         lat_registrar_error("Object not a function");
     }
+    return NULL;
 }
 
 

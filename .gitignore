@@ -6,10 +6,12 @@ codeblocks/doxygen/
 Testing/
 test/
 
-#ignora archivo objeto
+#ignora archivos
+*.a
 *.o
 *.gch
 *.exe
+Makefile
 CMakeCache.txt
 cmake_install.cmake
 CTestTestfile.cmake

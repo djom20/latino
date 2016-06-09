@@ -135,7 +135,12 @@ typedef union YYSTYPE {
 
 /** \brief nodo para representar un ast SI (if).
   *
-  * si (condicion) [sentencias] sino [sentencias] fin */
+  * si (condicion)
+  *     [sentencias]
+  * sino
+  *     [sentencias]
+  * fin
+  */
 typedef struct {
   nodo_tipo tipo;
   struct ast *condicion; /**< Condicion */
@@ -145,7 +150,10 @@ typedef struct {
 
 /** \brief nodo para representar una funcion.
   *
-  * funcion nombre_fun ([param1, param2, ... ]) [sentencias] fin */
+  * funcion nombre_fun ([param1, param2, ... ])
+  *     [sentencias]
+  * fin
+  */
 typedef struct {
   nodo_tipo tipo;
   struct ast *nombre;
@@ -197,6 +205,7 @@ ast *nodo_nuevo_identificador(const char *s, int num_linea, int num_columna);
   *
   */
 ast *nodo_nuevo_constante(char *s, int num_linea, int num_columna);
+
 /** Nuevo nodo tipo Logico (verdadero/falso)
   *
   * \param b: Nodo valor (0 o 1)

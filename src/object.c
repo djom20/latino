@@ -36,8 +36,7 @@ THE SOFTWARE.
 void lat_asignar_contexto_objeto(lat_objeto* ns, lat_objeto* name, lat_objeto* o)
 {
     if (ns->tipo != T_INSTANCE)
-    {
-        debug("ns->type: %d", ns->tipo);
+    {        
         lat_registrar_error("Namespace no es una instancia");
     }
     else
@@ -50,8 +49,7 @@ void lat_asignar_contexto_objeto(lat_objeto* ns, lat_objeto* name, lat_objeto* o
 lat_objeto* lat_obtener_contexto_objeto(lat_objeto* ns, lat_objeto* name)
 {
     if (ns->tipo != T_INSTANCE)
-    {
-        debug("ns->type: %d", ns->tipo);
+    {        
         lat_registrar_error("Namespace is not an nombre");
     }
     else
@@ -70,8 +68,7 @@ lat_objeto* lat_obtener_contexto_objeto(lat_objeto* ns, lat_objeto* name)
 int lat_contexto_contiene(lat_objeto* ns, lat_objeto* name)
 {
     if (ns->tipo != T_INSTANCE)
-    {
-        debug("ns->type: %d", ns->tipo);
+    {        
         lat_registrar_error("Namespace no es una instancia");
     }
     else

@@ -240,8 +240,9 @@ static char *hints(const char *buf, int *color, int *bold) {
 */
 
 static void lat_repl(lat_mv *mv)
-{    
-    char* buf = (char*)lat_asignar_memoria(MAX_STR_INTERN);
+{   
+    
+    char* buf = malloc(MAX_STR_INTERN*sizeof(char));
     ast* tmp = NULL;
     int status;
     mv->REPL = true;
@@ -255,7 +256,7 @@ static void lat_repl(lat_mv *mv)
         {
             lat_objeto* curexpr = nodo_analizar_arbol(mv, tmp);
             lat_objeto* resultado = lat_llamar_funcion(mv, curexpr);
-            if(resultado->tipo != NULL && !contains(buf, "escribir") && !contains(buf, "imprimir")){
+            if(resultado->tipo && !contains(buf, "escribir") && !contains(buf, "imprimir")){
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
             }
@@ -263,7 +264,7 @@ static void lat_repl(lat_mv *mv)
             linenoiseHistorySave("history.txt");
         }
     }
-    lat_liberar_memoria(buf);
+    free(buf);
 }
 
 int main(int argc, char *argv[])

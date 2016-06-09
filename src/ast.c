@@ -335,9 +335,6 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
     {
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
         dbc(LOAD_NAME, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_NAME %s\n", (i - 1), ret->datos.cadena);
-#endif
     }
     break;
     case NODO_ASIGNACION: /*SET*/
@@ -345,74 +342,36 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
         pn(mv, node->l);
         lat_objeto *ret = lat_cadena_nueva(mv, node->r->valor->v.s);
         dbc(STORE_NAME, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tSTORE_NAME %s\n", (i - 1), ret->datos.cadena);
-#endif
     }
-    break;
-    /*
-    case NODO_INCREMENTO:
-    {
-        pn(mv, node->l);
-        dbc(OP_INC, 255, 0, NULL);
-#if DEPURAR_MV
-        printf("INC R255 R0\n");
-#endif
-    }
-    break;
-    case NODO_DECREMENTO:
-    {
-        pn(mv, node->l);
-        dbc(OP_DEC, 255, 0, NULL);
-#if DEPURAR_MV
-        printf("DEC R255 R0\n");
-#endif
-    }
-    break;
-    */
+    break;    
     case NODO_LITERAL:
     {
         lat_objeto *ret = lat_literal_nuevo(mv, node->valor->v.c);
         dbc(LOAD_CONST, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_CONST %s\n", (i - 1), ret->datos.literal);
-#endif
     }
     break;
     case NODO_ENTERO:
     {
         lat_objeto *ret = lat_entero_nuevo(mv, node->valor->v.i);
         dbc(LOAD_CONST, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_CONST %ld\n", (i - 1), ret->datos.entero);
-#endif
     }
     break;
     case NODO_DECIMAL:
     {
         lat_objeto *ret = lat_decimal_nuevo(mv, node->valor->v.d);
         dbc(LOAD_CONST, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_CONST %.14g\n", (i - 1), ret->datos.decimal);
-#endif
     }
     break;
     case NODO_CADENA:
     {
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
         dbc(LOAD_CONST, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_CONST %s\n", (i - 1), ret->datos.cadena);
-#endif
     }
     break;
     case NODO_LOGICO:
     {
         lat_objeto *ret = node->valor->v.b ? mv->objeto_cierto : mv->objeto_falso;
         dbc(LOAD_CONST, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tLOAD_CONST %i\n", (i - 1), ret->datos.logico);
-#endif
     }
     break;
     case NODO_SI:
@@ -444,16 +403,16 @@ fin
         temp[0] = i;
         dbc(NOP, NULL, NULL, NULL); //instruccion auxiliar para suplantar por POP_JUMP_IF_FALSE
         pn(mv, nSi->entonces);
-        if (nSi->sino == NULL)
+        if (nSi->sino)
         {
-            //no hay instruccion SINO
-            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)i, NULL, NULL);
-        }else{
             temp[1] = i;
             dbc(NOP, NULL, NULL, NULL); //instruccion auxiliar para suplantar por JUMP_FORWARD
             pn(mv, nSi->sino);
             bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)(temp[1]+1), NULL, NULL);
             bcode[temp[1]] = lat_bc(JUMP_FORWARD, (void*)i, NULL, NULL);
+        }else{
+            //no hay instruccion SINO
+            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)i, NULL, NULL);
         }
     }
     break;
@@ -522,10 +481,6 @@ fin
         dbc(MAKE_FUNCTION, (void*)funcion_bcode, (void*)num_params, NULL);
         lat_objeto *ret = lat_cadena_nueva(mv, nFun->nombre->valor->v.s);
         dbc(STORE_NAME, ret, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tMAKE_FUNCTION %i\n", (i - 1), num_params);
-        printf("%i\tSTORE_NAME %s\n", (i - 1), nFun->nombre->valor->v.s);
-#endif
         funcion_bcode = NULL;
         fi = 0;
         num_params = 0;
@@ -542,9 +497,6 @@ fin
             }
             //pn(mv, node->l);
             num_params++;
-#if DEPURAR_MV
-            printf("%i\tSTORE_NAME %s\n", (i - 1), ret->datos.cadena);
-#endif
         }
         if (node->r)
             pn(mv, node->r);
@@ -561,9 +513,6 @@ fin
         //procesa el identificador de la funcion ej. escribir
         pn(mv, node->l);
         dbc(CALL_FUNCTION, (void*)num_args, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCALL_FUNCTION %i\n", (i - 1), num_args);
-#endif
         num_args = 0;
     }
     break;
@@ -571,9 +520,6 @@ fin
     {
         pn(mv, node->l);
         dbc(RETURN_VALUE, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tRETURN_VALUE\n", (i - 1));
-#endif
     }
     break;
     case NODO_FUNCION_ARGUMENTOS:
@@ -600,9 +546,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(BINARY_ADD, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tBINARY_ADD\n", (i - 1));
-#endif
         }break;
     case NODO_RESTA:
         {
@@ -613,9 +556,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(BINARY_SUBTRACT, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tBINARY_SUBTRACT\n", (i - 1));
-#endif
         }break;
     case NODO_MULTIPLICACION:
         {
@@ -626,9 +566,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(BINARY_MULTIPLY, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tBINARY_MULTIPLY\n", (i - 1));
-#endif
         }break;
     case NODO_DIVISION:
         {
@@ -639,9 +576,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(BINARY_FLOOR_DIVIDE, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tBINARY_FLOOR_DIVIDE\n", (i - 1));
-#endif
         }break;
     case NODO_MODULO:
         {
@@ -652,9 +586,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(BINARY_MODULO, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tBINARY_MODULO\n", (i - 1));
-#endif
         }break;
     case NODO_MENOR_QUE:
         {
@@ -665,9 +596,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_LT, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_LT\n", (i - 1));
-#endif
         }break;
     case NODO_MENOR_IGUAL:
         {
@@ -678,9 +606,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_LTE, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_LTE\n", (i - 1));
-#endif
         }break;
     case NODO_MAYOR_QUE:
         {
@@ -691,9 +616,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_GT, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_GT\n", (i - 1));
-#endif
         }break;
     case NODO_MAYOR_IGUAL:
         {
@@ -704,9 +626,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_GTE, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_GTE\n", (i - 1));
-#endif
         }break;
     case NODO_IGUALDAD:
         {
@@ -717,9 +636,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_EQ, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_EQ\n", (i - 1));
-#endif
         }break;
     case NODO_DESIGUALDAD:
         {
@@ -730,9 +646,6 @@ fin
                 pn(mv, node->r);
             }
             dbc(COMPARE_OP_NEQ, NULL, NULL, NULL);
-#if DEPURAR_MV
-        printf("%i\tCOMPARE_OP_NEQ\n", (i - 1));
-#endif
         }break;
     /*case NS:
       {

@@ -39,6 +39,8 @@ typedef struct lat_objeto lat_objeto;
 *
 */
 
+
+
 /** \brief Tipo de dato
 *
 * Tipo de dato que maneja la maquina virtual

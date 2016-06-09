@@ -1,19 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Session Name="C:\src\latino\codelite\latino.workspace">
-  <int Value="1" Name="m_selectedTab"/>
+  <int Value="2" Name="m_selectedTab"/>
   <wxString Value="C:\src\latino\codelite\latino.workspace" Name="m_workspaceName"/>
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
-      <wxString Value="C:\src\latino\src\ast.h" Name="FileName"/>
-      <int Value="339" Name="FirstVisibleLine"/>
-      <int Value="116" Name="CurrentLine"/>
+      <wxString Value="C:\src\latino\src\vm.c" Name="FileName"/>
+      <int Value="537" Name="FirstVisibleLine"/>
+      <int Value="554" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
       <IntVector Name="CollapsedFolds"/>
     </TabInfo>
     <TabInfo>
       <wxString Value="C:\src\latino\src\ast.c" Name="FileName"/>
-      <int Value="246" Name="FirstVisibleLine"/>
-      <int Value="43" Name="CurrentLine"/>
+      <int Value="228" Name="FirstVisibleLine"/>
+      <int Value="255" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\ast.h" Name="FileName"/>
+      <int Value="198" Name="FirstVisibleLine"/>
+      <int Value="326" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\latino.c" Name="FileName"/>
+      <int Value="121" Name="FirstVisibleLine"/>
+      <int Value="230" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\vm.h" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="99" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\object.h" Name="FileName"/>
+      <int Value="75" Name="FirstVisibleLine"/>
+      <int Value="83" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\object.c" Name="FileName"/>
+      <int Value="67" Name="FirstVisibleLine"/>
+      <int Value="85" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\khash.h" Name="FileName"/>
+      <int Value="534" Name="FirstVisibleLine"/>
+      <int Value="660" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\latino.h" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="94" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\libmath.h" Name="FileName"/>
+      <int Value="150" Name="FirstVisibleLine"/>
+      <int Value="159" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\libmem.h" Name="FileName"/>
+      <int Value="36" Name="FirstVisibleLine"/>
+      <int Value="54" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\libstring.h" Name="FileName"/>
+      <int Value="31" Name="FirstVisibleLine"/>
+      <int Value="42" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\linenoise\linenoise.h" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="50" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\parse.h" Name="FileName"/>
+      <int Value="18" Name="FirstVisibleLine"/>
+      <int Value="32" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\linenoise\utf8.h" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="11" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\utils.h" Name="FileName"/>
+      <int Value="25" Name="FirstVisibleLine"/>
+      <int Value="51" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\libio.h" Name="FileName"/>
+      <int Value="42" Name="FirstVisibleLine"/>
+      <int Value="36" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\libmem.c" Name="FileName"/>
+      <int Value="23" Name="FirstVisibleLine"/>
+      <int Value="49" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\lex.h" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="13" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="C:\src\latino\src\linenoise\linenoise.c" Name="FileName"/>
+      <int Value="134" Name="FirstVisibleLine"/>
+      <int Value="135" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
       <IntVector Name="CollapsedFolds"/>
     </TabInfo>
@@ -21,8 +147,8 @@
   <SerializedObject Name="m_breakpoints">
     <long Value="2" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
-      <wxString Value="C:\src\latino\src\vm.c" Name="file"/>
-      <int Value="1090" Name="lineno"/>
+      <wxString Value="C:\src\latino\src\ast.c" Name="file"/>
+      <int Value="259" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>
@@ -37,8 +163,8 @@
       <int Value="0" Name="origin"/>
     </SerializedObject>
     <SerializedObject Name="Breakpoint1">
-      <wxString Value="C:\src\latino\src\vm.c" Name="file"/>
-      <int Value="1100" Name="lineno"/>
+      <wxString Value="C:\src\latino\src\ast.c" Name="file"/>
+      <int Value="260" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

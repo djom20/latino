@@ -37,42 +37,11 @@ typedef struct lat_mv lat_mv;
 #include "object.h"
 
 /**\brief Bandera para debuguear las instrucciones de la maquina virtual */
-#define DEPURAR_MV 0
+//#define DEPURAR_MV 0
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
 {    
-    OP_PUSH,    /**< Inserta en la pila */
-    OP_POP,    /**< Extrae de la pila */
-    OP_GET,    /**< Obtiene un valor */
-    OP_SET,    /**< Establece un valor */
-    //OP_STORELIT,    /**< Almacena un cadena tipo literal */
-    //OP_STOREINT,    /**< Almacena un entero */
-    //OP_STOREDOUBLE,    /**< Almacena un decimal */
-    //OP_STORESTR,    /**< Almacena una cadena */
-    //OP_STOREBOOL,    /**< Almacena un valor logico */
-    //OP_STORELIST,    /**< Almacena una lista */
-    OP_PUSHLIST,    /**< Inserta la lista en la pila */
-    OP_POPLIST,    /**< Extrae la lista de la pila */
-    OP_LISTGETITEM,    /**< Obtiene un valor de la lista */
-    OP_LISTSETITEM,    /**< Asigna un valor de la lista */
-    OP_MOV,    /**< Mueve valores a los registros de la MV */
-    OP_GLOBALNS,    /**< Almacena variables globales */
-    OP_LOCALNS,    /**< Almacena variables locales */
-    OP_NS,    /**< Define un contexto */
-    RETURN_VALUENS,    /**< Define el fin de un contexto */
-    OP_JMP,    /**< Saltar a otra instruccion */
-    OP_JMPIF,    /**< Saltar a otra instruccion SI la condicion se cumple */
-    OP_NOT,    /**< Negacion de un valor logico */
-    OP_INC,    /**< Incrementa un valor entero en 1 */
-    OP_DEC,    /**< Disminuye un valor entero en 1 */
-    OP_STOREDICT,    /**< Almacena un objeto diccionario */
-    OP_PUSHDICT,    /**< Inserta un objeto diccionario en la pila */
-    OP_POPDICT,    /**< Extrae un objeto diccionario de la pila */
-    OP_PUSHDICTELEM, /**< Crea un objeto par (llave-valor) y lo agrega al diccionario de la pila */
-    OP_DICTGETITEM,    /**< Obtiene un valor del diccionario */
-    OP_DICTSETITEM,    /**< Asigna un valor del diccionario */
-    
     /* redefinicion de instrucciones */
     NOP,    /**< Indica No operacion */
     LOAD_CONST,

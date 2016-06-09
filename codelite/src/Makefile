@@ -38,23 +38,22 @@ cmake_force:
 #=============================================================================
 # Set environment variables for the build.
 
-# The shell in which to execute make rules.
-SHELL = /bin/sh
+SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = C:/CMake/bin/cmake.exe
+CMAKE_COMMAND = C:\CMake\bin\cmake.exe
 
 # The command to remove a file.
-RM = C:/CMake/bin/cmake.exe -E remove -f
+RM = C:\CMake\bin\cmake.exe -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:/src/latino
+CMAKE_SOURCE_DIR = C:\src\latino
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:/src/latino/codelite
+CMAKE_BINARY_DIR = C:\src\latino\codelite
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -62,7 +61,7 @@ CMAKE_BINARY_DIR = C:/src/latino/codelite
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	C:/CMake/bin/cmake-gui.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	C:\CMake\bin\cmake-gui.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -73,7 +72,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	C:/CMake/bin/cmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	C:\CMake\bin\cmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -84,7 +83,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	C:/CMake/bin/ctest.exe --force-new-ctest-process $(ARGS)
+	C:\CMake\bin\ctest.exe --force-new-ctest-process $(ARGS)
 .PHONY : test
 
 # Special rule for the target test
@@ -94,14 +93,14 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	cd C:/src/latino/codelite && $(CMAKE_COMMAND) -E cmake_progress_start C:/src/latino/codelite/CMakeFiles C:/src/latino/codelite/src/CMakeFiles/progress.marks
-	cd C:/src/latino/codelite && $(MAKE) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:/src/latino/codelite/CMakeFiles 0
+	cd C:\src\latino\codelite && $(CMAKE_COMMAND) -E cmake_progress_start C:\src\latino\codelite\CMakeFiles C:\src\latino\codelite\src\CMakeFiles\progress.marks
+	cd C:\src\latino\codelite && $(MAKE) -f CMakeFiles\Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\src\latino\codelite\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd C:/src/latino/codelite && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	cd C:\src\latino\codelite && $(MAKE) -f CMakeFiles\Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -111,22 +110,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd C:/src/latino/codelite && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd C:\src\latino\codelite && $(MAKE) -f CMakeFiles\Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd C:/src/latino/codelite && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd C:\src\latino\codelite && $(MAKE) -f CMakeFiles\Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd C:/src/latino/codelite && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd C:\src\latino\codelite && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles\Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/CMakeFiles/latino.dir/rule:
-	cd C:/src/latino/codelite && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/latino.dir/rule
+	cd C:\src\latino\codelite && $(MAKE) -f CMakeFiles\Makefile2 src/CMakeFiles/latino.dir/rule
 .PHONY : src/CMakeFiles/latino.dir/rule
 
 # Convenience name for target.
@@ -136,7 +135,7 @@ latino: src/CMakeFiles/latino.dir/rule
 
 # fast build rule for target.
 latino/fast:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/build
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/build
 .PHONY : latino/fast
 
 ast.obj: ast.c.obj
@@ -145,7 +144,7 @@ ast.obj: ast.c.obj
 
 # target to build an object file
 ast.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/ast.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/ast.c.obj
 .PHONY : ast.c.obj
 
 ast.i: ast.c.i
@@ -154,7 +153,7 @@ ast.i: ast.c.i
 
 # target to preprocess a source file
 ast.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/ast.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/ast.c.i
 .PHONY : ast.c.i
 
 ast.s: ast.c.s
@@ -163,7 +162,7 @@ ast.s: ast.c.s
 
 # target to generate assembly for a file
 ast.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/ast.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/ast.c.s
 .PHONY : ast.c.s
 
 latino.obj: latino.c.obj
@@ -172,7 +171,7 @@ latino.obj: latino.c.obj
 
 # target to build an object file
 latino.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/latino.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/latino.c.obj
 .PHONY : latino.c.obj
 
 latino.i: latino.c.i
@@ -181,7 +180,7 @@ latino.i: latino.c.i
 
 # target to preprocess a source file
 latino.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/latino.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/latino.c.i
 .PHONY : latino.c.i
 
 latino.s: latino.c.s
@@ -190,7 +189,7 @@ latino.s: latino.c.s
 
 # target to generate assembly for a file
 latino.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/latino.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/latino.c.s
 .PHONY : latino.c.s
 
 lex.obj: lex.c.obj
@@ -199,7 +198,7 @@ lex.obj: lex.c.obj
 
 # target to build an object file
 lex.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/lex.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/lex.c.obj
 .PHONY : lex.c.obj
 
 lex.i: lex.c.i
@@ -208,7 +207,7 @@ lex.i: lex.c.i
 
 # target to preprocess a source file
 lex.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/lex.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/lex.c.i
 .PHONY : lex.c.i
 
 lex.s: lex.c.s
@@ -217,7 +216,7 @@ lex.s: lex.c.s
 
 # target to generate assembly for a file
 lex.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/lex.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/lex.c.s
 .PHONY : lex.c.s
 
 libio.obj: libio.c.obj
@@ -226,7 +225,7 @@ libio.obj: libio.c.obj
 
 # target to build an object file
 libio.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libio.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libio.c.obj
 .PHONY : libio.c.obj
 
 libio.i: libio.c.i
@@ -235,7 +234,7 @@ libio.i: libio.c.i
 
 # target to preprocess a source file
 libio.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libio.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libio.c.i
 .PHONY : libio.c.i
 
 libio.s: libio.c.s
@@ -244,7 +243,7 @@ libio.s: libio.c.s
 
 # target to generate assembly for a file
 libio.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libio.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libio.c.s
 .PHONY : libio.c.s
 
 libmath.obj: libmath.c.obj
@@ -253,7 +252,7 @@ libmath.obj: libmath.c.obj
 
 # target to build an object file
 libmath.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmath.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmath.c.obj
 .PHONY : libmath.c.obj
 
 libmath.i: libmath.c.i
@@ -262,7 +261,7 @@ libmath.i: libmath.c.i
 
 # target to preprocess a source file
 libmath.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmath.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmath.c.i
 .PHONY : libmath.c.i
 
 libmath.s: libmath.c.s
@@ -271,7 +270,7 @@ libmath.s: libmath.c.s
 
 # target to generate assembly for a file
 libmath.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmath.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmath.c.s
 .PHONY : libmath.c.s
 
 libmem.obj: libmem.c.obj
@@ -280,7 +279,7 @@ libmem.obj: libmem.c.obj
 
 # target to build an object file
 libmem.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmem.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmem.c.obj
 .PHONY : libmem.c.obj
 
 libmem.i: libmem.c.i
@@ -289,7 +288,7 @@ libmem.i: libmem.c.i
 
 # target to preprocess a source file
 libmem.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmem.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmem.c.i
 .PHONY : libmem.c.i
 
 libmem.s: libmem.c.s
@@ -298,7 +297,7 @@ libmem.s: libmem.c.s
 
 # target to generate assembly for a file
 libmem.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libmem.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libmem.c.s
 .PHONY : libmem.c.s
 
 libstring.obj: libstring.c.obj
@@ -307,7 +306,7 @@ libstring.obj: libstring.c.obj
 
 # target to build an object file
 libstring.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libstring.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libstring.c.obj
 .PHONY : libstring.c.obj
 
 libstring.i: libstring.c.i
@@ -316,7 +315,7 @@ libstring.i: libstring.c.i
 
 # target to preprocess a source file
 libstring.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libstring.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libstring.c.i
 .PHONY : libstring.c.i
 
 libstring.s: libstring.c.s
@@ -325,7 +324,7 @@ libstring.s: libstring.c.s
 
 # target to generate assembly for a file
 libstring.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/libstring.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/libstring.c.s
 .PHONY : libstring.c.s
 
 linenoise/linenoise.obj: linenoise/linenoise.c.obj
@@ -334,7 +333,7 @@ linenoise/linenoise.obj: linenoise/linenoise.c.obj
 
 # target to build an object file
 linenoise/linenoise.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.obj
 .PHONY : linenoise/linenoise.c.obj
 
 linenoise/linenoise.i: linenoise/linenoise.c.i
@@ -343,7 +342,7 @@ linenoise/linenoise.i: linenoise/linenoise.c.i
 
 # target to preprocess a source file
 linenoise/linenoise.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.i
 .PHONY : linenoise/linenoise.c.i
 
 linenoise/linenoise.s: linenoise/linenoise.c.s
@@ -352,7 +351,7 @@ linenoise/linenoise.s: linenoise/linenoise.c.s
 
 # target to generate assembly for a file
 linenoise/linenoise.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/linenoise.c.s
 .PHONY : linenoise/linenoise.c.s
 
 linenoise/utf8.obj: linenoise/utf8.c.obj
@@ -361,7 +360,7 @@ linenoise/utf8.obj: linenoise/utf8.c.obj
 
 # target to build an object file
 linenoise/utf8.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.obj
 .PHONY : linenoise/utf8.c.obj
 
 linenoise/utf8.i: linenoise/utf8.c.i
@@ -370,7 +369,7 @@ linenoise/utf8.i: linenoise/utf8.c.i
 
 # target to preprocess a source file
 linenoise/utf8.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.i
 .PHONY : linenoise/utf8.c.i
 
 linenoise/utf8.s: linenoise/utf8.c.s
@@ -379,7 +378,7 @@ linenoise/utf8.s: linenoise/utf8.c.s
 
 # target to generate assembly for a file
 linenoise/utf8.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/linenoise/utf8.c.s
 .PHONY : linenoise/utf8.c.s
 
 object.obj: object.c.obj
@@ -388,7 +387,7 @@ object.obj: object.c.obj
 
 # target to build an object file
 object.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/object.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/object.c.obj
 .PHONY : object.c.obj
 
 object.i: object.c.i
@@ -397,7 +396,7 @@ object.i: object.c.i
 
 # target to preprocess a source file
 object.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/object.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/object.c.i
 .PHONY : object.c.i
 
 object.s: object.c.s
@@ -406,7 +405,7 @@ object.s: object.c.s
 
 # target to generate assembly for a file
 object.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/object.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/object.c.s
 .PHONY : object.c.s
 
 parse.obj: parse.c.obj
@@ -415,7 +414,7 @@ parse.obj: parse.c.obj
 
 # target to build an object file
 parse.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/parse.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/parse.c.obj
 .PHONY : parse.c.obj
 
 parse.i: parse.c.i
@@ -424,7 +423,7 @@ parse.i: parse.c.i
 
 # target to preprocess a source file
 parse.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/parse.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/parse.c.i
 .PHONY : parse.c.i
 
 parse.s: parse.c.s
@@ -433,7 +432,7 @@ parse.s: parse.c.s
 
 # target to generate assembly for a file
 parse.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/parse.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/parse.c.s
 .PHONY : parse.c.s
 
 utils.obj: utils.c.obj
@@ -442,7 +441,7 @@ utils.obj: utils.c.obj
 
 # target to build an object file
 utils.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/utils.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/utils.c.obj
 .PHONY : utils.c.obj
 
 utils.i: utils.c.i
@@ -451,7 +450,7 @@ utils.i: utils.c.i
 
 # target to preprocess a source file
 utils.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/utils.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/utils.c.i
 .PHONY : utils.c.i
 
 utils.s: utils.c.s
@@ -460,7 +459,7 @@ utils.s: utils.c.s
 
 # target to generate assembly for a file
 utils.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/utils.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/utils.c.s
 .PHONY : utils.c.s
 
 vm.obj: vm.c.obj
@@ -469,7 +468,7 @@ vm.obj: vm.c.obj
 
 # target to build an object file
 vm.c.obj:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/vm.c.obj
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/vm.c.obj
 .PHONY : vm.c.obj
 
 vm.i: vm.c.i
@@ -478,7 +477,7 @@ vm.i: vm.c.i
 
 # target to preprocess a source file
 vm.c.i:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/vm.c.i
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/vm.c.i
 .PHONY : vm.c.i
 
 vm.s: vm.c.s
@@ -487,58 +486,58 @@ vm.s: vm.c.s
 
 # target to generate assembly for a file
 vm.c.s:
-	cd C:/src/latino/codelite && $(MAKE) -f src/CMakeFiles/latino.dir/build.make src/CMakeFiles/latino.dir/vm.c.s
+	cd C:\src\latino\codelite && $(MAKE) -f src\CMakeFiles\latino.dir\build.make src/CMakeFiles/latino.dir/vm.c.s
 .PHONY : vm.c.s
 
 # Help Target
 help:
-	@echo "The following are some of the valid targets for this Makefile:"
-	@echo "... all (the default if no target is provided)"
-	@echo "... clean"
-	@echo "... depend"
-	@echo "... edit_cache"
-	@echo "... rebuild_cache"
-	@echo "... test"
-	@echo "... latino"
-	@echo "... ast.obj"
-	@echo "... ast.i"
-	@echo "... ast.s"
-	@echo "... latino.obj"
-	@echo "... latino.i"
-	@echo "... latino.s"
-	@echo "... lex.obj"
-	@echo "... lex.i"
-	@echo "... lex.s"
-	@echo "... libio.obj"
-	@echo "... libio.i"
-	@echo "... libio.s"
-	@echo "... libmath.obj"
-	@echo "... libmath.i"
-	@echo "... libmath.s"
-	@echo "... libmem.obj"
-	@echo "... libmem.i"
-	@echo "... libmem.s"
-	@echo "... libstring.obj"
-	@echo "... libstring.i"
-	@echo "... libstring.s"
-	@echo "... linenoise/linenoise.obj"
-	@echo "... linenoise/linenoise.i"
-	@echo "... linenoise/linenoise.s"
-	@echo "... linenoise/utf8.obj"
-	@echo "... linenoise/utf8.i"
-	@echo "... linenoise/utf8.s"
-	@echo "... object.obj"
-	@echo "... object.i"
-	@echo "... object.s"
-	@echo "... parse.obj"
-	@echo "... parse.i"
-	@echo "... parse.s"
-	@echo "... utils.obj"
-	@echo "... utils.i"
-	@echo "... utils.s"
-	@echo "... vm.obj"
-	@echo "... vm.i"
-	@echo "... vm.s"
+	@echo The following are some of the valid targets for this Makefile:
+	@echo ... all (the default if no target is provided)
+	@echo ... clean
+	@echo ... depend
+	@echo ... edit_cache
+	@echo ... rebuild_cache
+	@echo ... test
+	@echo ... latino
+	@echo ... ast.obj
+	@echo ... ast.i
+	@echo ... ast.s
+	@echo ... latino.obj
+	@echo ... latino.i
+	@echo ... latino.s
+	@echo ... lex.obj
+	@echo ... lex.i
+	@echo ... lex.s
+	@echo ... libio.obj
+	@echo ... libio.i
+	@echo ... libio.s
+	@echo ... libmath.obj
+	@echo ... libmath.i
+	@echo ... libmath.s
+	@echo ... libmem.obj
+	@echo ... libmem.i
+	@echo ... libmem.s
+	@echo ... libstring.obj
+	@echo ... libstring.i
+	@echo ... libstring.s
+	@echo ... linenoise/linenoise.obj
+	@echo ... linenoise/linenoise.i
+	@echo ... linenoise/linenoise.s
+	@echo ... linenoise/utf8.obj
+	@echo ... linenoise/utf8.i
+	@echo ... linenoise/utf8.s
+	@echo ... object.obj
+	@echo ... object.i
+	@echo ... object.s
+	@echo ... parse.obj
+	@echo ... parse.i
+	@echo ... parse.s
+	@echo ... utils.obj
+	@echo ... utils.i
+	@echo ... utils.s
+	@echo ... vm.obj
+	@echo ... vm.i
+	@echo ... vm.s
 .PHONY : help
 
 
@@ -550,6 +549,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd C:/src/latino/codelite && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd C:\src\latino\codelite && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles\Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
