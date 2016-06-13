@@ -54,7 +54,7 @@ typedef struct {
     int b;  /**< Logico */
     long i; /**< Entero */
     double d;   /**< Decimal */
-    char *c;    /**< Literal */
+    char *l;    /**< Literal */
     char *s;    /**< Cadena */
     void *f;    /**< Funcion */
   } v;

@@ -1,6 +1,6 @@
 $script = <<SCRIPT
 apt-get update -qq -y
-apt-get install build-essential gcc g++ git make cmake flex bison -y
+apt-get install build-essential gcc g++ git make cmake flex bison valgrind -y
 SCRIPT
 
 Vagrant.configure("2") do |config|

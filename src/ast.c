@@ -28,9 +28,9 @@ THE SOFTWARE.
 #include "vm.h"
 #include "libmem.h"
 
-#define dbc(I, A, B, C) bcode[i++] = lat_bc(I, A, B, C)
+#define dbc(I, A, B) bcode[i++] = lat_bc(I, A, B)
 #define pn(mv, N) i = nodo_analizar(mv, N, bcode, i)
-#define fdbc(I, A, B, C) funcion_bcode[fi++] = lat_bc(I, A, B, C)
+#define fdbc(I, A, B) funcion_bcode[fi++] = lat_bc(I, A, B)
 #define fpn(mv, N) fi = nodo_analizar(mv, N, funcion_bcode, fi)
 
 ast *nodo_nuevo(nodo_tipo nt, ast *l, ast *r)
@@ -92,7 +92,7 @@ ast *nodo_nuevo_literal(char *c, int num_linea, int num_columna)
     nodo_valor *val = (nodo_valor*)lat_asignar_memoria(sizeof(nodo_valor));
     val->t = VALOR_LITERAL;
     a->valor = val;
-    a->valor->v.c = parse_string(c, strlen(c));
+    a->valor->v.l = parse_string(c, strlen(c));
     a->valor->es_constante = false;
     a->valor->num_linea = num_linea;
     a->valor->num_columna = num_columna;
@@ -257,7 +257,7 @@ lat_objeto *nodo_analizar_arbol(lat_mv *mv, ast *tree)
 {
     lat_bytecode *bcode = (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
     int i = nodo_analizar(mv, tree, bcode, 0);
-    dbc(RETURN_VALUE, NULL, NULL, NULL);
+    dbc(RETURN_VALUE, 0, NULL);
     nodo_liberar(tree);
     return lat_definir_funcion(mv, bcode, 0);
 }
@@ -334,85 +334,84 @@ int nodo_analizar(lat_mv *mv, ast *node, lat_bytecode *bcode, int i)
     case NODO_IDENTIFICADOR: /*GET*/
     {
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
-        dbc(LOAD_NAME, ret, NULL, NULL);
+        dbc(LOAD_NAME, 0, ret);
     }
     break;
     case NODO_ASIGNACION: /*SET*/
     {
         pn(mv, node->l);
         lat_objeto *ret = lat_cadena_nueva(mv, node->r->valor->v.s);
-        dbc(STORE_NAME, ret, NULL, NULL);
+        dbc(STORE_NAME, 0, ret);
     }
-    break;    
+    break;
     case NODO_LITERAL:
     {
-        lat_objeto *ret = lat_literal_nuevo(mv, node->valor->v.c);
-        dbc(LOAD_CONST, ret, NULL, NULL);
+        lat_objeto *ret = lat_literal_nuevo(mv, node->valor->v.l);
+        dbc(LOAD_CONST, 0, ret);
     }
     break;
     case NODO_ENTERO:
     {
         lat_objeto *ret = lat_entero_nuevo(mv, node->valor->v.i);
-        dbc(LOAD_CONST, ret, NULL, NULL);
+        dbc(LOAD_CONST, 0, ret);
     }
     break;
     case NODO_DECIMAL:
     {
         lat_objeto *ret = lat_decimal_nuevo(mv, node->valor->v.d);
-        dbc(LOAD_CONST, ret, NULL, NULL);
+        dbc(LOAD_CONST, 0, ret);
     }
     break;
     case NODO_CADENA:
     {
         lat_objeto *ret = lat_cadena_nueva(mv, node->valor->v.s);
-        dbc(LOAD_CONST, ret, NULL, NULL);
+        dbc(LOAD_CONST, 0, ret);
     }
     break;
     case NODO_LOGICO:
     {
         lat_objeto *ret = node->valor->v.b ? mv->objeto_cierto : mv->objeto_falso;
-        dbc(LOAD_CONST, ret, NULL, NULL);
+        dbc(LOAD_CONST, 0, ret);
     }
     break;
     case NODO_SI:
     {
-/*
-i = 5
-si i < 0
-  escribir("es negativo")
-sino
-  escribir("es positivo")
-fin
-# genera el siguiente bytecode
-0       LOAD_CONST 5
-1       STORE_NAME i
-2       LOAD_NAME i
-3       LOAD_CONST 0
-4       COMPARE_OP_LT
-5       POP_JUMP_IF_FALSE   10
-6       LOAD_CONST es negativo
-7       LOAD_NAME escribir
-8       CALL_FUNCTION
-9       JUMP_FORWARD    13
-10      LOAD_CONST es positivo
-11      LOAD_NAME escribir
-12      CALL_FUNCTION
-*/
+        /*
+        i = 5
+        si i < 0
+          escribir("es negativo")
+        sino
+          escribir("es positivo")
+        fin
+        # genera el siguiente bytecode
+        0       LOAD_CONST 5
+        1       STORE_NAME i
+        2       LOAD_NAME i
+        3       LOAD_CONST 0
+        4       COMPARE_OP_LT
+        5       POP_JUMP_IF_FALSE   10
+        6       LOAD_CONST es negativo
+        7       LOAD_NAME escribir
+        8       CALL_FUNCTION
+        9       JUMP_FORWARD    13
+        10      LOAD_CONST es positivo
+        11      LOAD_NAME escribir
+        12      CALL_FUNCTION
+        */
         nodo_si *nSi = ((nodo_si *)node);
         pn(mv, nSi->condicion);
         temp[0] = i;
-        dbc(NOP, NULL, NULL, NULL); //instruccion auxiliar para suplantar por POP_JUMP_IF_FALSE
+        dbc(NOP, 0, NULL); //instruccion auxiliar para suplantar por POP_JUMP_IF_FALSE
         pn(mv, nSi->entonces);
         if (nSi->sino)
         {
             temp[1] = i;
-            dbc(NOP, NULL, NULL, NULL); //instruccion auxiliar para suplantar por JUMP_FORWARD
+            dbc(NOP, 0, NULL); //instruccion auxiliar para suplantar por JUMP_FORWARD
             pn(mv, nSi->sino);
-            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)(temp[1]+1), NULL, NULL);
-            bcode[temp[1]] = lat_bc(JUMP_FORWARD, (void*)i, NULL, NULL);
+            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, temp[1]+1, NULL);
+            bcode[temp[1]] = lat_bc(JUMP_FORWARD, i, NULL);
         }else{
-            //no hay instruccion SINO
-            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, (void*)i, NULL, NULL);
+            bcode[temp[0]] = lat_bc(POP_JUMP_IF_FALSE, i, NULL);
         }
     }
     break;
@@ -468,8 +467,7 @@ fin
     case NODO_FUNCION_USUARIO:
     {
         nodo_funcion *nFun = ((nodo_funcion *)node);
-        funcion_bcode =
-            (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
+        funcion_bcode = (lat_bytecode *)lat_asignar_memoria(sizeof(lat_bytecode) * MAX_BYTECODE_FUNCTION);
         fi = 0;
         num_params = 0;
         //parametros de la funcion
@@ -478,9 +476,9 @@ fin
             fpn(mv, nFun->parametros);
         }
         fpn(mv, nFun->sentencias);
-        dbc(MAKE_FUNCTION, (void*)funcion_bcode, (void*)num_params, NULL);
+        dbc(MAKE_FUNCTION, 0, (void*)funcion_bcode);
         lat_objeto *ret = lat_cadena_nueva(mv, nFun->nombre->valor->v.s);
-        dbc(STORE_NAME, ret, NULL, NULL);
+        dbc(STORE_NAME, 0, ret);
         funcion_bcode = NULL;
         fi = 0;
         num_params = 0;
@@ -493,9 +491,8 @@ fin
         {
             if(node->l->valor){
                 ret = lat_clonar_objeto(mv, lat_cadena_nueva(mv, node->l->valor->v.s));
-                dbc(STORE_NAME, ret, NULL, NULL);
+                dbc(STORE_NAME, 0, ret);
             }
-            //pn(mv, node->l);
             num_params++;
         }
         if (node->r)
@@ -507,19 +504,17 @@ fin
         //procesa los argumentos
         num_args = 0;
         if (node->r)
-        {
             pn(mv, node->r);
-        }
         //procesa el identificador de la funcion ej. escribir
         pn(mv, node->l);
-        dbc(CALL_FUNCTION, (void*)num_args, NULL, NULL);
+        dbc(CALL_FUNCTION, num_args, NULL);
         num_args = 0;
     }
     break;
     case NODO_RETORNO:
     {
         pn(mv, node->l);
-        dbc(RETURN_VALUE, NULL, NULL, NULL);
+        dbc(RETURN_VALUE, 0, NULL);
     }
     break;
     case NODO_FUNCION_ARGUMENTOS:
@@ -539,113 +534,91 @@ fin
     break;
     case NODO_SUMA:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(BINARY_ADD, NULL, NULL, NULL);
+            dbc(BINARY_ADD, 0, NULL);
         }break;
     case NODO_RESTA:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(BINARY_SUBTRACT, NULL, NULL, NULL);
+            dbc(BINARY_SUBTRACT, 0, NULL);
         }break;
     case NODO_MULTIPLICACION:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(BINARY_MULTIPLY, NULL, NULL, NULL);
+            dbc(BINARY_MULTIPLY, 0, NULL);
         }break;
     case NODO_DIVISION:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(BINARY_FLOOR_DIVIDE, NULL, NULL, NULL);
+            dbc(BINARY_FLOOR_DIVIDE, 0, NULL);
         }break;
     case NODO_MODULO:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(BINARY_MODULO, NULL, NULL, NULL);
+            dbc(BINARY_MODULO, 0, NULL);
         }break;
     case NODO_MENOR_QUE:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_LT, NULL, NULL, NULL);
+            dbc(COMPARE_OP_LT, 0, NULL);
         }break;
     case NODO_MENOR_IGUAL:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_LTE, NULL, NULL, NULL);
+            dbc(COMPARE_OP_LTE, 0, NULL);
         }break;
     case NODO_MAYOR_QUE:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_GT, NULL, NULL, NULL);
+            dbc(COMPARE_OP_GT, 0, NULL);
         }break;
     case NODO_MAYOR_IGUAL:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_GTE, NULL, NULL, NULL);
+            dbc(COMPARE_OP_GTE, 0, NULL);
         }break;
     case NODO_IGUALDAD:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_EQ, NULL, NULL, NULL);
+            dbc(COMPARE_OP_EQ, 0, NULL);
         }break;
     case NODO_DESIGUALDAD:
         {
-            if(node->l){
+            if(node->l)
                 pn(mv, node->l);
-            }
-            if(node->r){
+            if(node->r)
                 pn(mv, node->r);
-            }
-            dbc(COMPARE_OP_NEQ, NULL, NULL, NULL);
+            dbc(COMPARE_OP_NEQ, 0, NULL);
         }break;
     /*case NS:
       {

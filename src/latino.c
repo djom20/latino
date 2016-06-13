@@ -37,62 +37,58 @@ static char *buffer;
 
 int yyparse(ast **root, yyscan_t scanner);
 
-ast *lat_analizar_expresion(lat_mv *mv, char* expr, int* status)
+int lat_analizar_expresion(lat_mv *mv, ast** nodo, char* expr)
 {
     setlocale (LC_ALL, "");
-    ast *ret = NULL;
     yyscan_t scanner;
     YY_BUFFER_STATE state;
     lex_state scan_state = {.insert = 0};
     yylex_init_extra(&scan_state, &scanner);
     state = yy_scan_string(expr, scanner);
-    *status = yyparse(&ret, scanner);
+    int status = yyparse(nodo, scanner);
     yy_delete_buffer(state, scanner);
     yylex_destroy(scanner);
-    return ret;
+    return status;
 }
 
-ast *lat_analizar_archivo(lat_mv *mv, char *infile)
+int lat_analizar_archivo(lat_mv *mv, ast** nodo, char *infile)
 {
     if (infile == NULL)
     {
         printf("Especifique un archivo\n");
-        return NULL;
+        return 1;
     }
     char *dot = strrchr(infile, '.');
     char *extension;
     if (!dot || dot == infile)
-    {
         extension = "";
-    }
     else
-    {
         extension = dot + 1;
-    }
     if (strcmp(extension, "lat") != 0)
     {
         printf("El archivo no contiene la extension .lat\n");
-        return NULL;
+        return 1;
     }
     file = fopen(infile, "r");
     if (file == NULL)
     {
         printf("No se pudo abrir el archivo\n");
-        return NULL;
+        return 1;
     }
     fseek(file, 0, SEEK_END);
     int fsize = ftell(file);
     fseek(file, 0, SEEK_SET);
-    buffer = calloc(fsize, 1);
+    //buffer = calloc(fsize, 1);
+    buffer = malloc(fsize+1);
     size_t newSize = fread(buffer, sizeof(char), fsize, file);
     if (buffer == NULL)
     {
-        printf("No se pudo asignar %d bytes de memoria\n", fsize);
-        return NULL;
+        printf("No se pudo asignar %i bytes de memoria\n", fsize);
+        return 1;
     }
     buffer[newSize] = '\0';
-    int status;
-    return lat_analizar_expresion(mv, buffer, &status);
+    int status = lat_analizar_expresion(mv, nodo, buffer);
+    return status;
 }
 /**
  * Muestra la version de latino en la consola
@@ -133,25 +129,32 @@ void lat_ayuda()
     printf("%s%s\n", "HOME         : ", getenv("HOME"));
 }
 
-static int leer_linea(lat_mv *mv, char* buffer){
+static int leer_linea(lat_mv *mv, char* buffer)
+{
     analisis_silencioso = 1;
     int resultado;
     char *input = "";
     //buffer = lat_asignar_memoria(MAX_STR_LENGTH);
     char *tmp = "";
-    REPETIR:
+REPETIR:
     input = linenoise("latino> ");
-    if(input == NULL){
+    if(input == NULL)
+    {
         return -1;
     }
-    for(;;){
+    for(;;)
+    {
         tmp = concat(tmp, "\n");
         tmp = concat(tmp, input);
         int estatus;
-        lat_analizar_expresion(mv, tmp, &estatus);
-        if(estatus == 1){
+        ast* nodo = malloc(sizeof(ast));
+        estatus = lat_analizar_expresion(mv, &nodo, tmp);
+        if(estatus == 1)
+        {
             goto REPETIR;
-        }else{
+        }
+        else
+        {
             strcpy(buffer, tmp);
             return 0;
         }
@@ -159,7 +162,8 @@ static int leer_linea(lat_mv *mv, char* buffer){
     return resultado;
 }
 
-static void completion(const char *buf, linenoiseCompletions *lc) {
+static void completion(const char *buf, linenoiseCompletions *lc)
+{
     if (startsWith(buf, "esc"))
         linenoiseAddCompletion(lc,"escribir");
     if (startsWith(buf, "imp"))
@@ -240,23 +244,22 @@ static char *hints(const char *buf, int *color, int *bold) {
 */
 
 static void lat_repl(lat_mv *mv)
-{   
-    
+{
+    ast* nodo = malloc(sizeof(ast));
     char* buf = malloc(MAX_STR_INTERN*sizeof(char));
-    ast* tmp = NULL;
-    int status;
     mv->REPL = true;
     linenoiseHistoryLoad("history.txt");
     linenoiseSetCompletionCallback(completion);
     while (leer_linea(mv, buf) != -1)
     {
         analisis_silencioso = 0;
-        tmp = lat_analizar_expresion(mv, buf, &status);
-        if(tmp != NULL)
+        int status = lat_analizar_expresion(mv, &nodo, buf);
+        if(status != 0)
         {
-            lat_objeto* curexpr = nodo_analizar_arbol(mv, tmp);
+            lat_objeto* curexpr = nodo_analizar_arbol(mv, nodo);
             lat_objeto* resultado = lat_llamar_funcion(mv, curexpr);
-            if(resultado->tipo && !contains(buf, "escribir") && !contains(buf, "imprimir")){
+            if(resultado->tipo && !contains(buf, "escribir") && !contains(buf, "imprimir"))
+            {
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
             }
@@ -265,6 +268,7 @@ static void lat_repl(lat_mv *mv)
         }
     }
     free(buf);
+    free(nodo);
 }
 
 int main(int argc, char *argv[])
@@ -304,18 +308,21 @@ int main(int argc, char *argv[])
     if(argc > 1 && infile != NULL)
     {
         mv->REPL = false;
-        ast *tree = lat_analizar_archivo(mv, infile);
-        if (!tree)
+        ast *nodo = malloc(sizeof(ast));
+        int estado = 0;
+        estado = lat_analizar_archivo(mv, &nodo, infile);
+        if (estado)
         {
             return EXIT_FAILURE;
         }
-        lat_objeto* mainFunc = nodo_analizar_arbol(mv, tree);
+        lat_objeto* mainFunc = nodo_analizar_arbol(mv, nodo);
         //printf("---------------------------------------------\n");
         lat_llamar_funcion(mv, mainFunc);
         if(file != NULL)
         {
             fclose(file);
         }
+        free(nodo);
     }
     else
     {

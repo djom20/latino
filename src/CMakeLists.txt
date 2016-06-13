@@ -1,6 +1,9 @@
+set(CMAKE_VERBOSE_MAKEFILE true)
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fprofile-arcs -ftest-coverage -g -O0 -std=c11")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -fprofile-arcs -ftest-coverage -g -O0 -std=c11")
-set(CMAKE_VERBOSE_MAKEFILE true)
+set(CMAKE_C_OUTPUT_EXTENSION_REPLACE 1)
+
 
 if(UNIX)
     link_libraries(m)

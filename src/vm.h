@@ -41,7 +41,7 @@ typedef struct lat_mv lat_mv;
 
 /**\brief Instrucciones de la maquina virtual */
 typedef enum lat_ins
-{    
+{
     /* redefinicion de instrucciones */
     NOP,    /**< Indica No operacion */
     LOAD_CONST,
@@ -61,7 +61,7 @@ typedef enum lat_ins
     COMPARE_OP_GTE,         /**< Operador >= */
     COMPARE_OP_EQ,          /**< Operador == */
     COMPARE_OP_NEQ,         /**< Operador != */
-    POP_JUMP_IF_FALSE,    
+    POP_JUMP_IF_FALSE,
     POP_JUMP_IF_TRUE,
     JUMP_FORWARD
 } lat_ins;
@@ -71,9 +71,8 @@ typedef enum lat_ins
 typedef struct lat_bytecode
 {
     lat_ins ins;    /**< Instruccion */
-    void* a;        /**< datos a */
+    int a;        /**< datos a */
     void* b;        /**< datos b */
-    void* c;        /**< datos c */
 } lat_bytecode;
 
 /**\brief Define una funcion de usuario */
@@ -111,13 +110,13 @@ lat_mv* lat_crear_maquina_virtual();
   *
   *\param vm: Apuntador a la MV
   */
-void lat_ejecutar(lat_mv *mv);
+//void lat_ejecutar(lat_mv *mv);
 
 /**\brief Ejecuta un archivo en la MV
   *
   *\param vm: Apuntador a la MV
   */
-void lat_ejecutar_archivo(lat_mv *mv);
+//void lat_ejecutar_archivo(lat_mv *mv);
 
 /**\brief Inserta un objeto en la pila de la MV
   *
@@ -411,7 +410,7 @@ void lat_salir(lat_mv *mv);
   *\param meta: Datos
   *\return lat_bytecode: Objeto bytecode
   */
-lat_bytecode lat_bc(lat_ins i, void* a, void* b, void* meta);
+lat_bytecode lat_bc(lat_ins i, int a, void* b);
 
 /**\brief Ejecuta una funcion
   *

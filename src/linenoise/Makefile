@@ -41,19 +41,22 @@ RM = /usr/bin/cmake -E remove -f
 # Escaping for special characters.
 EQUALS = =
 
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = /usr/bin/cmake-gui
+
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vagrant/latino
+CMAKE_SOURCE_DIR = /home/primi/src/latino
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vagrant/latino
+CMAKE_BINARY_DIR = /home/primi/src/latino
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running interactive CMake command-line interface..."
-	/usr/bin/cmake -i .
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/cmake-gui -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -81,16 +84,6 @@ install/local: preinstall
 # Special rule for the target install/local
 install/local/fast: install/local
 .PHONY : install/local/fast
-
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: install/strip
-.PHONY : install/strip/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -123,14 +116,14 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/vagrant/latino && $(CMAKE_COMMAND) -E cmake_progress_start /home/vagrant/latino/CMakeFiles /home/vagrant/latino/src/linenoise/CMakeFiles/progress.marks
-	cd /home/vagrant/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/vagrant/latino/CMakeFiles 0
+	cd /home/primi/src/latino && $(CMAKE_COMMAND) -E cmake_progress_start /home/primi/src/latino/CMakeFiles /home/primi/src/latino/src/linenoise/CMakeFiles/progress.marks
+	cd /home/primi/src/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/primi/src/latino/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/vagrant/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/clean
+	cd /home/primi/src/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/clean
 .PHONY : clean
 
 # The main clean target
@@ -139,22 +132,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/vagrant/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/preinstall
+	cd /home/primi/src/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/vagrant/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/preinstall
+	cd /home/primi/src/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/vagrant/latino && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/primi/src/latino && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/linenoise/CMakeFiles/linenoise.dir/rule:
-	cd /home/vagrant/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/CMakeFiles/linenoise.dir/rule
+	cd /home/primi/src/latino && $(MAKE) -f CMakeFiles/Makefile2 src/linenoise/CMakeFiles/linenoise.dir/rule
 .PHONY : src/linenoise/CMakeFiles/linenoise.dir/rule
 
 # Convenience name for target.
@@ -163,32 +156,23 @@ linenoise: src/linenoise/CMakeFiles/linenoise.dir/rule
 
 # fast build rule for target.
 linenoise/fast:
-	cd /home/vagrant/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/build
+	cd /home/primi/src/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/build
 .PHONY : linenoise/fast
 
-linenoise.o: linenoise.c.o
+# target to build an object file
+linenoise.o:
+	cd /home/primi/src/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.o
 .PHONY : linenoise.o
 
-# target to build an object file
-linenoise.c.o:
-	cd /home/vagrant/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.c.o
-.PHONY : linenoise.c.o
-
-linenoise.i: linenoise.c.i
+# target to preprocess a source file
+linenoise.i:
+	cd /home/primi/src/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.i
 .PHONY : linenoise.i
 
-# target to preprocess a source file
-linenoise.c.i:
-	cd /home/vagrant/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.c.i
-.PHONY : linenoise.c.i
-
-linenoise.s: linenoise.c.s
-.PHONY : linenoise.s
-
 # target to generate assembly for a file
-linenoise.c.s:
-	cd /home/vagrant/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.c.s
-.PHONY : linenoise.c.s
+linenoise.s:
+	cd /home/primi/src/latino && $(MAKE) -f src/linenoise/CMakeFiles/linenoise.dir/build.make src/linenoise/CMakeFiles/linenoise.dir/linenoise.s
+.PHONY : linenoise.s
 
 # Help Target
 help:
@@ -199,7 +183,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
-	@echo "... install/strip"
 	@echo "... linenoise"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
@@ -218,6 +201,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/vagrant/latino && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/primi/src/latino && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

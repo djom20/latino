@@ -133,7 +133,7 @@ typedef struct YYLTYPE
   * \return ast: Nodo AST
   *
   */
-ast* lat_analizar_expresion(lat_mv *mv, char* expr, int* status);
+int lat_analizar_expresion(lat_mv *mv, ast** nodo, char* expr);
 
 /** Analiza un archivo
   *
@@ -141,6 +141,6 @@ ast* lat_analizar_expresion(lat_mv *mv, char* expr, int* status);
   * \return ast: Nodo AST
   *
   */
-ast* lat_analizar_archivo(lat_mv *mv, char* ruta);
+int lat_analizar_archivo(lat_mv *mv, ast** nodo, char *infile);
 
 #endif /* _LATINO_H_ */

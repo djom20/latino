@@ -66,8 +66,8 @@ lat_mv* lat_crear_maquina_virtual()
     //lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "gc"), lat_definir_cfuncion(ret, lat_basurero));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "imprimir"), lat_definir_cfuncion(ret, lat_imprimir));
 
-    lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "ejecutar"), lat_definir_cfuncion(ret, lat_ejecutar));
-    lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "ejecutar_archivo"), lat_definir_cfuncion(ret, lat_ejecutar_archivo));
+    //lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "ejecutar"), lat_definir_cfuncion(ret, lat_ejecutar));
+    //lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "ejecutar_archivo"), lat_definir_cfuncion(ret, lat_ejecutar_archivo));
 
     /* funciones matematicas */
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "arco_coseno"), lat_definir_cfuncion(ret, lat_arco_coseno));
@@ -525,16 +525,16 @@ void lat_imprimir_diccionario(lat_mv *mv, hash_map* d)
 }
 
 
-void lat_ejecutar(lat_mv *mv)
+/*void lat_ejecutar(lat_mv *mv)
 {
     int status;
     lat_objeto *func = nodo_analizar_arbol(mv, lat_analizar_expresion(mv, lat_obtener_cadena(lat_desapilar(mv)), &status));
     lat_llamar_funcion(mv, func);
     //lat_apilar(mv, mv->registros[255]);
-}
+}*/
 
 
-void lat_ejecutar_archivo(lat_mv *mv)
+/*void lat_ejecutar_archivo(lat_mv *mv)
 {
     char *input = lat_obtener_cadena(lat_desapilar(mv));
     char *dot = strrchr(input, '.');
@@ -558,7 +558,7 @@ void lat_ejecutar_archivo(lat_mv *mv)
         lat_llamar_funcion(mv, func);
         //lat_apilar(mv, mv->registros[255]);
     }
-}
+}*/
 
 
 void lat_clonar(lat_mv *mv)
@@ -866,13 +866,12 @@ void lat_negacion(lat_mv *mv)
     lat_apilar(mv, lat_obtener_logico(o) == true ? mv->objeto_falso : mv->objeto_cierto);
 }
 
-lat_bytecode lat_bc(lat_ins i, void* a, void* b, void* c)
+lat_bytecode lat_bc(lat_ins i, int a, void* b)
 {
     lat_bytecode ret;
     ret.ins = i;
     ret.a = a;
     ret.b = b;
-    ret.c = c;
     return ret;
 }
 
@@ -930,29 +929,29 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         {
             //printf("%i\t", pos);
             switch ((int)cur.ins)
-            {                        
+            {
             /* redefinicion de instrucciones estilo Python*/
             case LOAD_CONST:
             {
                 //lat_imprimir_lista(mv, mv->pila);
-                lat_objeto *variable = (lat_objeto*)cur.a;
+                lat_objeto *variable = (lat_objeto*)cur.b;
                 lat_apilar(mv, variable);
-                //printf("LOAD_CONST\n");                
+                //printf("LOAD_CONST\n");
             }
                 break;
             case STORE_NAME:{
                     //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto *contexto = lat_obtener_contexto(mv);
-                    lat_objeto *variable = (lat_objeto*)cur.a;
+                    lat_objeto *variable = (lat_objeto*)cur.b;
                     lat_objeto *valor = lat_desapilar(mv);
                     lat_asignar_contexto_objeto(contexto, variable, valor);
                     //printf("STORE_NAME %s\n", variable->datos.cadena);
                 }
                 break;
             case LOAD_NAME: {
-                    //lat_imprimir_lista(mv, mv->pila);                    
+                    //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto *contexto = lat_obtener_contexto(mv);
-                    lat_objeto *variable = (lat_objeto*)cur.a;
+                    lat_objeto *variable = (lat_objeto*)cur.b;
                     lat_objeto *valor = lat_obtener_contexto_objeto(contexto, variable);
                     lat_apilar(mv, valor);
                     //printf("LOAD_NAME %s\n", variable->datos.cadena);
@@ -991,14 +990,14 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             case COMPARE_OP_EQ:
                 lat_igualdad(mv);
                 break;
-            case COMPARE_OP_NEQ:                
+            case COMPARE_OP_NEQ:
                 lat_diferente(mv);
                 break;
             case NOP:
                 //printf("NOP\n");
                 break;
-            case JUMP_FORWARD:                
-                pos = ((int)cur.a - 1);                
+            case JUMP_FORWARD:
+                pos = ((int)cur.a - 1);
                 //printf("JUMP_FORWARD %i\n", (int)cur.a);
                 break;
             case POP_JUMP_IF_FALSE:
@@ -1013,11 +1012,11 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
                 }
                 break;
             case POP_JUMP_IF_TRUE:
-                {                    
+                {
                     //lat_imprimir_lista(mv, mv->pila);
                     lat_objeto* cond = lat_desapilar(mv);
                     if(lat_obtener_logico(cond) == true){
-                        pos = ((int)cur.a - 1);                        
+                        pos = ((int)cur.a - 1);
                     }
                     //printf("POP_JUMP_IF_TRUE\t%i\n", (int)cur.a);
                 }
@@ -1025,7 +1024,7 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
             case MAKE_FUNCTION: {
                     //printf("MAKE_FUNCTION\n");
                     //lat_imprimir_lista(mv, mv->pila);
-                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.a, (int)cur.b);
+                    lat_objeto* funcion_usuario = lat_definir_funcion(mv, (lat_bytecode*)cur.b, cur.a);
                     lat_apilar(mv, funcion_usuario);
                 }
                 break;
@@ -1057,14 +1056,14 @@ lat_objeto* lat_llamar_funcion(lat_mv *mv, lat_objeto* func)
         if(!mv->REPL)
         {
             lat_desapilar_contexto(mv);
-        }        
+        }
     }
     else if (func->tipo == T_CFUNC)
     {
         ((void (*)(lat_mv*))(func->datos.funcion))(mv);
     }
     else
-    {        
+    {
         lat_registrar_error("Object not a function");
     }
     return NULL;
