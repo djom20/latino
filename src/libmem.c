@@ -50,3 +50,11 @@ void lat_liberar_memoria(void* ptr)
         free(ptr);
     }
 }
+
+size_t lat_tamanio_memoria(void* ptr){
+#ifdef _WIN32
+    return _msize(ptr);
+#else
+    return malloc_usable_size(ptr);
+#endif
+}

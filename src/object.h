@@ -58,8 +58,7 @@ typedef enum lat_tipo_objeto
     T_DICT,         /**< diccionario */
     T_DICT_ITEM,    /**< diccionario */
     T_FUNC,         /**< funcion */
-    T_CFUNC,        /**< funcion C */
-    T_STRUCT,       /**< estructura */
+    T_CFUNC,        /**< funcion C */    
 } lat_tipo_objeto;
 
 /** \brief Datos del objeto

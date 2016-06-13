@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "libmath.h"
 #include "vm.h"
 
+/*
 void lat_arco_coseno(lat_mv *mv)
 {
     lat_objeto *a = lat_desapilar(mv);
@@ -93,23 +94,6 @@ void lat_exponente(lat_mv *mv)
     lat_apilar(mv, lat_decimal_nuevo(mv, exp(lat_obtener_decimal(a))));
 }
 
-/*
-void lat_frexp(lat_mv *mv){
-  lat_objeto *a = lat_desapilar(mv);
-  mv->registros[255] = lat_decimal_nuevo(mv, frexp(lat_obtener_decimal(a)));
-}
-*/
-
-/*
-void lat_ldexp(lat_mv *mv)
-{
-  lat_objeto* a = lat_desapilar(mv);
-  lat_objeto* b = lat_desapilar(mv);
-  mv->registros[255] = lat_decimal_nuevo(mv, ldexp(lat_obtener_decimal(a),
-lat_obtener_entero(b)));
-}
-*/
-
 void lat_logaritmo_natural(lat_mv *mv)
 {
     lat_objeto *a = lat_desapilar(mv);
@@ -121,13 +105,6 @@ void lat_logaritmo_base10(lat_mv *mv)
     lat_objeto *a = lat_desapilar(mv);
     lat_apilar(mv, lat_decimal_nuevo(mv, log10(lat_obtener_decimal(a))));
 }
-
-/*
-void lat_modf(lat_mv *mv){
-  lat_objeto *a = lat_desapilar(mv);
-  mv->registros[255] = lat_decimal_nuevo(mv, modf(lat_obtener_decimal(a)));
-}
-*/
 
 void lat_potencia(lat_mv *mv)
 {
@@ -166,3 +143,4 @@ void lat_modulo_decimal(lat_mv *mv)
     lat_objeto *b = lat_desapilar(mv);
     lat_apilar(mv, lat_decimal_nuevo(mv, fmod(lat_obtener_decimal(a), lat_obtener_decimal(b))));
 }
+*/

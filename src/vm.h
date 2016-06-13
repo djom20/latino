@@ -88,14 +88,14 @@ typedef struct lat_funcion
 struct lat_mv
 {
     list_node* pila;     /**< pila de la maquina virtual */
-    list_node* modulos;     /**< modulos importados en la MV */
-    list_node* todos_objetos;     /**< objetos creados dinamicamente en la MV */
-    list_node* basurero_objetos;     /**< objetos listos para liberar por el colector de basura */
-    lat_objeto* registros[8];    /**< Registros auxiliares de la MV */
+    //list_node* modulos;     /**< modulos importados en la MV */
+    //list_node* todos_objetos;     /**< objetos creados dinamicamente en la MV */
+    //list_node* basurero_objetos;     /**< objetos listos para liberar por el colector de basura */
+    //lat_objeto* registros[8];    /**< Registros auxiliares de la MV */
     lat_objeto* contexto_pila[256];   /**< Tabla hash para el contexto actual */
     lat_objeto* objeto_cierto;   /**< Valor logico verdadero */
     lat_objeto* objeto_falso;   /**< Valor logico falso */
-    size_t memoria_usada;      /**< Tamanio de memoria creado dinamicamente */
+    //size_t memoria_usada;      /**< Tamanio de memoria creado dinamicamente */
     int apuntador_pila;      /**< Apuntador de la pila */
     bool REPL;  /**< Indica si esta corriendo REPL */
 };
@@ -105,6 +105,12 @@ struct lat_mv
   *\return lat_mv: Apuntador a la MV
   */
 lat_mv* lat_crear_maquina_virtual();
+
+/**\brief Libera la memoria de la maquina virtual (MV)
+  *
+  *\param lat_mv: Apuntador a la MV
+  */
+void lat_eliminar_maquina_virtual(lat_mv *mv);
 
 /**\brief Ejecuta una cadena de instrucciones en la MV
   *

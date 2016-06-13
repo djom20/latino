@@ -55,7 +55,7 @@ THE SOFTWARE.
 /** Derechos de Latino */
 #define LAT_DERECHOS LAT_VERSION "\nTodos los derechos reservados (C) 2015-2016. Latinoamerica"
 
-/** Determina si el sistema es GNU */
+/** Determina si el sistema es Windows */
 #ifdef _WIN32
 #define PATH_SEP "\\"
 /* Visual Leak Detector for Visual C++ */
@@ -105,6 +105,8 @@ extern int analisis_silencioso;
 #define MAX_STR_LENGTH (1024*2)
 /** Tamanio maximo de la pila de la maquina virtual */
 #define MAX_STACK_SIZE 255
+/** Tamanio maximo para los niveles de contexto */
+#define MAX_LEVEL_SCOPE 255
 /** Tamanio maximo de una ruta de derectorio */
 #define MAX_PATH_LENGTH 1024
 /** Tamanio maximo de la entrada por teclado */

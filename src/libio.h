@@ -39,20 +39,20 @@ THE SOFTWARE.
   * \param vm: Maquina virtual de latino
   *
   */
-void lat_leer(lat_mv *mv);
+//void lat_leer(lat_mv *mv);
 
 /** Lee un archivo
   *
   * \param vm: Maquina virtual de latino
   *
   */
-void lat_leer_archivo(lat_mv *mv);
+//void lat_leer_archivo(lat_mv *mv);
 
 /** Escribir en un archivo
   *
   * \param vm: Maquina virtual de latino
   *
   */
-void lat_escribir_archivo(lat_mv *mv);
+//void lat_escribir_archivo(lat_mv *mv);
 
 #endif /* ifndef _LIBIO_H_ */

@@ -106,6 +106,7 @@ lat_objeto* lat_cadena_hash(const char* p, size_t len)
     return str_new(p, len);
 }
 
+/*
 void lat_comparar(lat_mv *mv)
 {
     lat_objeto* b = lat_desapilar(mv);
@@ -201,12 +202,6 @@ void lat_es_igual(lat_mv *mv)
         lat_apilar(mv, mv->objeto_falso);
     }
 }
-
-/*
-void lat_format(lat_mv *mv){
-
-}
-*/
 
 void lat_indice(lat_mv *mv)
 {
@@ -319,3 +314,4 @@ void lat_quitar_espacios(lat_mv *mv)
     lat_objeto* a = lat_desapilar(mv);
     lat_apilar(mv, lat_cadena_nueva(mv, trim(lat_obtener_cadena(a))));
 }
+*/

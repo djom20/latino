@@ -55,8 +55,7 @@ typedef struct {
     long i; /**< Entero */
     double d;   /**< Decimal */
     char *l;    /**< Literal */
-    char *s;    /**< Cadena */
-    void *f;    /**< Funcion */
+    char *s;    /**< Cadena */    
   } v;
 } nodo_valor;
 
@@ -93,10 +92,6 @@ typedef enum {
   NODO_Y,   /**< Nodo y (and) logico */
   NODO_O,   /**< Nodo o (or) logico */
   NODO_NEGACION,    /**< Nodo no (!) negacion logico */
-  NODO_SELECCION,   /**< Nodo seleccion */
-  NODO_CASO,   /**< Nodo caso */
-  NODO_DEFECTO,   /**< Nodo defecto */
-  NODO_CASOS,   /**< Nodo casos */
   NODO_DESDE,   /**< Nodo desde */
   NODO_INCREMENTO,   /**< Nodo incremento */
   NODO_DECREMENTO,   /**< Nodo decremento */

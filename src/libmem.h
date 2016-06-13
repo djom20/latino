@@ -55,4 +55,11 @@ void* lat_reasignar_memoria(void* ptr, size_t size);
   */
 void lat_liberar_memoria(void* ptr);
 
+/** Regresa el tamanio que ocupa la memoria por el apuntador ptr
+  *
+  * \param ptr: Apuntador a la memoria a medir
+  *
+  */
+size_t lat_tamanio_memoria(void* ptr);
+
 #endif /*_LIBMEM_H_*/

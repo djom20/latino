@@ -164,14 +164,6 @@ lat_objeto* lat_cfuncion_nueva(lat_mv *mv)
     return ret;
 }
 
-lat_objeto* lat_estructura_nueva(lat_mv *mv, void* val)
-{
-    lat_objeto* ret = lat_crear_objeto(mv);
-    ret->tipo = T_STRUCT;
-    ret->datos.cstruct = val;
-    return ret;
-}
-
 void lat_marcar_objeto(lat_objeto* o, int m)
 {
     if (o != NULL)
@@ -257,9 +249,7 @@ void lat_eliminar_objeto(lat_mv *mv, lat_objeto* o)
     case T_CFUNC:
         return;
     case T_DICT_ITEM:
-        return;
-    case T_STRUCT:
-        return;
+        return;        
         break;
     }
     lat_liberar_memoria(o);
@@ -462,12 +452,3 @@ list_node* lat_obtener_lista(lat_objeto* o)
     return NULL;
 }
 
-void* lat_obtener_estructura(lat_objeto* o)
-{
-    if (o->tipo == T_STRUCT)
-    {
-        return o->datos.lista;
-    }
-    lat_registrar_error("Object no es un tipo estructura");
-    return NULL;
-}

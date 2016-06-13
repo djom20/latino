@@ -77,9 +77,8 @@ int lat_analizar_archivo(lat_mv *mv, ast** nodo, char *infile)
     }
     fseek(file, 0, SEEK_END);
     int fsize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    //buffer = calloc(fsize, 1);
-    buffer = malloc(fsize+1);
+    fseek(file, 0, SEEK_SET);    
+    buffer = malloc(fsize+1);   //+1 para fin de cadena '\0'
     size_t newSize = fread(buffer, sizeof(char), fsize, file);
     if (buffer == NULL)
     {
@@ -93,14 +92,14 @@ int lat_analizar_archivo(lat_mv *mv, ast** nodo, char *infile)
 /**
  * Muestra la version de latino en la consola
  */
-void lat_version()
+static void lat_version()
 {
     printf("%s\n", LAT_DERECHOS);
 }
 /**
  * Para crear el logo en ascii
  */
-void lat_logo()
+static void lat_logo()
 {
     printf("%s\n", LAT_LOGO);
 }
@@ -108,18 +107,18 @@ void lat_logo()
 /**
  * Muestra la ayuda en la consola
  */
-void lat_ayuda()
+static void lat_ayuda()
 {
     lat_logo();
     lat_version();
-    printf("%s\n", "Uso de latino: latino [opcion] [archivo]");
+    printf("%s\n", "Uso de Latino: latino [opcion] [archivo]");
     printf("\n");
     printf("%s\n", "Opciones:");
-    printf("%s\n", "-a           : Muestra la ayuda de Latino");
-    printf("%s\n", "-i           : Inicia el interprete de Latino (Modo interactivo)");
-    printf("%s\n", "-v           : Muestra la version de Latino");
-    printf("%s\n", "archivo      : Nombre del archivo con extension .lat");
-    printf("%s\n", "Ctrl-C       : Para cerrar");
+    printf("%s\n", "-a               : Muestra la ayuda de Latino");
+    printf("%s\n", "-i               : Inicia el interprete de Latino (Modo interactivo)");
+    printf("%s\n", "-v               : Muestra la version de Latino");
+    printf("%s\n", "archivo          : Nombre del archivo con extension .lat");
+    printf("%s\n", "Ctrl-C o salir() : Para cerrar interprete");
     printf("\n");
     printf("%s\n", "Variables de entorno:");
     printf("%s\n", "_____________________");
@@ -132,9 +131,8 @@ void lat_ayuda()
 static int leer_linea(lat_mv *mv, char* buffer)
 {
     analisis_silencioso = 1;
-    int resultado;
-    char *input = "";
-    //buffer = lat_asignar_memoria(MAX_STR_LENGTH);
+    int resultado = -1;
+    char *input = "";    
     char *tmp = "";
 REPETIR:
     input = linenoise("latino> ");
@@ -162,6 +160,9 @@ REPETIR:
     return resultado;
 }
 
+/*
+ * Agrega autocompletado para REPL (Read Eval Print Loop)
+ */
 static void completion(const char *buf, linenoiseCompletions *lc)
 {
     if (startsWith(buf, "esc"))
@@ -232,18 +233,7 @@ static void completion(const char *buf, linenoiseCompletions *lc)
         linenoiseAddCompletion(lc,"salir");
 }
 
-/*
-static char *hints(const char *buf, int *color, int *bold) {
-    if (!strcasecmp(buf,"escribir")) {
-        *color = 35;
-        *bold = 0;
-        return " Hola Latinos";
-    }
-    return NULL;
-}
-*/
-
-static void lat_repl(lat_mv *mv)
+static void lat_REPL(lat_mv *mv)
 {
     ast* nodo = malloc(sizeof(ast));
     char* buf = malloc(MAX_STR_INTERN*sizeof(char));
@@ -257,12 +247,13 @@ static void lat_repl(lat_mv *mv)
         if(status != 0)
         {
             lat_objeto* curexpr = nodo_analizar_arbol(mv, nodo);
-            lat_objeto* resultado = lat_llamar_funcion(mv, curexpr);
+            lat_llamar_funcion(mv, curexpr);
+            /*lat_objeto* resultado = lat_llamar_funcion(mv, curexpr);
             if(resultado->tipo && !contains(buf, "escribir") && !contains(buf, "imprimir"))
             {
                 lat_apilar(mv, resultado);
                 lat_imprimir(mv);
-            }
+            }*/
             linenoiseHistoryAdd(replace(buf, "\n", ""));
             linenoiseHistorySave("history.txt");
         }
@@ -297,7 +288,7 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "-i") == 0)
         {
             lat_version();
-            lat_repl(mv);
+            lat_REPL(mv);
             return EXIT_SUCCESS;
         }
         else
@@ -329,12 +320,13 @@ int main(int argc, char *argv[])
 #ifdef _WIN32
         //system("cmd");
         lat_version();
-        lat_repl(mv);
+        lat_REPL(mv);
 #else
         lat_version();
-        lat_repl(mv);
+        lat_REPL(mv);
 #endif
     }
 
+    lat_eliminar_maquina_virtual(mv);
     return EXIT_SUCCESS;
 }
