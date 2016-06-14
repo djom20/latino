@@ -54,6 +54,12 @@ THE SOFTWARE.
 #define LAT_VERSION "Latino " LAT_VERSION_MAYOR "." LAT_VERSION_MENOR "." LAT_VERSION_PARCHE
 /** Derechos de Latino */
 #define LAT_DERECHOS LAT_VERSION "\nTodos los derechos reservados (C) 2015-2016. Latinoamerica"
+// generado en
+// http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=latino
+/**
+ Dibuja el logo
+ */
+#define LAT_LOGO "\n.__          __  .__               \n|  | _____ _/  |_|__| ____   ____  \n|  | \\__  \\\\   __\\  |/    \\ /  _ \\ \n|  |__/ __ \\|  | |  |   |  (  <_> )\n|____(____  /__| |__|___|  /\\____/ \n          \\/             \\/        \n"
 
 /** Determina si el sistema es Windows */
 #ifdef _WIN32
@@ -79,21 +85,8 @@ THE SOFTWARE.
 #define LAT_TRY(L,c,a)		if (setjmp((c)->b) == 0) { a }
 #define lat_jmpbuf		jmp_buf
 
-// generado en
-// http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=latino
-/**
- Dibuja el logo
- */
-#define LAT_LOGO "\n.__          __  .__               \n|  | _____ _/  |_|__| ____   ____  \n|  | \\__  \\\\   __\\  |/    \\ /  _ \\ \n|  |__/ __ \\|  | |  |   |  (  <_> )\n|____(____  /__| |__|___|  /\\____/ \n          \\/             \\/        \n"
-
 /** Afirmar (asset), sirve para testear una condicion */
 #define lat_afirmar(cond) ((void)(false && (cond)))
-
-/** Indica si se desea debuguear el parser de bison */
-extern int debug;
-
-/** Indica que el analizador sintactico (bison) no debe emitir errores **/
-extern int analisis_silencioso;
 
 /** Tamanio maximo de instrucciones bytecode de una funcion */
 #define MAX_BYTECODE_FUNCTION (1024 * 10)
@@ -113,36 +106,5 @@ extern int analisis_silencioso;
 #define MAX_INPUT_SIZE 512
 /** Maximo numero de argumentos de una funcion */
 #define MAX_FUNC_ARGS 20
-
-/** Interface con flex */
-typedef struct YYLTYPE
-{
-    int first_line;
-    int first_column;
-    int last_line;
-    int last_column;
-} YYLTYPE;
-
-/** Establece que se definio una interface con Flex */
-#define YYLTYPE_IS_DECLARED 1
-
-/** No se requiere cabecera unistd.h */
-#define YY_NO_UNISTD_H 1
-
-/** Analiza una cadena como expresion
-  *
-  * \param expr: cadena a analizar
-  * \return ast: Nodo AST
-  *
-  */
-int lat_analizar_expresion(lat_mv *mv, ast** nodo, char* expr);
-
-/** Analiza un archivo
-  *
-  * \param ruta: Ruta del archivo a analizar
-  * \return ast: Nodo AST
-  *
-  */
-int lat_analizar_archivo(lat_mv *mv, ast** nodo, char *infile);
 
 #endif /* _LATINO_H_ */

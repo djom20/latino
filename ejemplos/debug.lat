@@ -1,3 +1,7 @@
+funcion f()
+    incluir("archivo.lat")
+fin
+
 i = 0
 mientras i < 10
     escribir(i)

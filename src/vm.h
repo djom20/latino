@@ -92,7 +92,7 @@ struct lat_mv
     //list_node* todos_objetos;     /**< objetos creados dinamicamente en la MV */
     //list_node* basurero_objetos;     /**< objetos listos para liberar por el colector de basura */
     //lat_objeto* registros[8];    /**< Registros auxiliares de la MV */
-    lat_objeto* contexto_pila[256];   /**< Tabla hash para el contexto actual */
+    lat_objeto* contexto_pila[255];   /**< Tabla hash para el contexto actual */
     lat_objeto* objeto_cierto;   /**< Valor logico verdadero */
     lat_objeto* objeto_falso;   /**< Valor logico falso */
     //size_t memoria_usada;      /**< Tamanio de memoria creado dinamicamente */
@@ -169,14 +169,14 @@ void lat_desapilar_contexto(lat_mv *mv);
   *\param vm: Apuntador a la MV
   *\param ctx: Apuntador al contexto
   */
-void lat_apilar_contexto_predefinido(lat_mv *mv, lat_objeto* ctx);
+//void lat_apilar_contexto_predefinido(lat_mv *mv, lat_objeto* ctx);
 
 /**\brief Extrae el contexto principal de la pila de la MV
   *
   *\param vm: Apuntador a la MV
   *\return lat_objeto: Apuntador al contexto
   */
-lat_objeto* lat_desapilar_contexto_predefinido(lat_mv *mv);
+//lat_objeto* lat_desapilar_contexto_predefinido(lat_mv *mv);
 
 /**\brief Extrae el contexto de la pila de la MV
   *
@@ -190,13 +190,13 @@ lat_objeto* lat_obtener_contexto(lat_mv *mv);
   *\param vm: Apuntador a la MV
   *\param o: Apuntador a objeto
   */
-void lat_basurero_agregar(lat_mv *mv, lat_objeto* o);
+//void lat_basurero_agregar(lat_mv *mv, lat_objeto* o);
 
 /**\brief Crea un objeto basurero
   *
   *\param vm: Apuntador a la MV
   */
-void lat_basurero(lat_mv *mv);
+//void lat_basurero(lat_mv *mv);
 
 /**\brief Define una funcion creada por el usuario
   *
@@ -218,7 +218,7 @@ lat_objeto* lat_definir_cfuncion(lat_mv *mv, void (*function)(lat_mv *mv));
   *
   *\param vm: Apuntador a la MV
   */
-void lat_numero_lista(lat_mv *mv);
+//void lat_numero_lista(lat_mv *mv);
 
 /**\brief Envia a consola el contenido de la lista
   *
@@ -244,13 +244,13 @@ void lat_imprimir(lat_mv *mv);
   *
   *\param vm: Apuntador a la MV
   */
-void lat_clonar(lat_mv *mv);
+//void lat_clonar(lat_mv *mv);
 
 /**\brief Agrega un elemento a la lista
   *
   *\param vm: Apuntador a la MV
   */
-void lat_cons(lat_mv *mv);
+//void lat_cons(lat_mv *mv);
 
 /**\brief Operador +
   *
@@ -376,13 +376,13 @@ void lat_cadena(lat_mv *mv);
   *
   *\param vm: Apuntador a la MV
   */
-void lat_maximo(lat_mv *mv);
+//void lat_maximo(lat_mv *mv);
 
 /**\brief Obtiene el minimo de dos numeros
   *
   *\param vm: Apuntador a la MV
   */
-void lat_minimo(lat_mv *mv);
+//void lat_minimo(lat_mv *mv);
 
 /**\brief Determina si una cadena es entero
   *

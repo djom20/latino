@@ -244,7 +244,7 @@ static void lat_REPL(lat_mv *mv)
     {
         analisis_silencioso = 0;
         int status = lat_analizar_expresion(mv, &nodo, buf);
-        if(status != 0)
+        if(status == 0)
         {
             lat_objeto* curexpr = nodo_analizar_arbol(mv, nodo);
             lat_llamar_funcion(mv, curexpr);
@@ -300,8 +300,7 @@ int main(int argc, char *argv[])
     {
         mv->REPL = false;
         ast *nodo = malloc(sizeof(ast));
-        int estado = 0;
-        estado = lat_analizar_archivo(mv, &nodo, infile);
+        int estado = lat_analizar_archivo(mv, &nodo, infile);
         if (estado)
         {
             return EXIT_FAILURE;

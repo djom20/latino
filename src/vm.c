@@ -49,7 +49,8 @@ lat_mv* lat_crear_maquina_virtual()
         lat_obtener_contexto(ret), lat_cadena_nueva(ret, "imprimir"), lat_definir_cfuncion(ret, lat_imprimir));
     lat_asignar_contexto_objeto(
         lat_obtener_contexto(ret), lat_cadena_nueva(ret, "escribir"), lat_definir_cfuncion(ret, lat_imprimir));
-        
+    lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "salir"), lat_definir_cfuncion(ret,
+        lat_salir));    
     /*lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "+"), lat_definir_cfuncion(ret,
     lat_sumar));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "-"), lat_definir_cfuncion(ret,
@@ -189,9 +190,7 @@ lat_mv* lat_crear_maquina_virtual()
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "decimal"), lat_definir_cfuncion(ret,
     lat_decimal));
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "cadena"), lat_definir_cfuncion(ret,
-    lat_cadena));
-    lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "salir"), lat_definir_cfuncion(ret,
-    lat_salir));
+    lat_cadena));    
     //ejemplo de implementacion de una funcion en C
     lat_asignar_contexto_objeto(lat_obtener_contexto(ret), lat_cadena_nueva(ret, "maximo"), lat_definir_cfuncion(ret,
     lat_maximo));
@@ -269,7 +268,7 @@ void lat_desapilar_contexto(lat_mv* mv)
     lat_eliminar_objeto(mv, mv->contexto_pila[mv->apuntador_pila--]);
 }
 
-void lat_apilar_contexto_predefinido(lat_mv* mv, lat_objeto* ctx)
+/*void lat_apilar_contexto_predefinido(lat_mv* mv, lat_objeto* ctx)
 {
     if(mv->apuntador_pila >= MAX_LEVEL_SCOPE) {
         lat_registrar_error("Namespace desborde de la pila");
@@ -283,7 +282,7 @@ lat_objeto* lat_desapilar_contexto_predefinido(lat_mv* mv)
         lat_registrar_error("Namespace pila vacia");
     }
     return mv->contexto_pila[mv->apuntador_pila--];
-}
+}*/
 
 lat_objeto* lat_obtener_contexto(lat_mv* mv)
 {
@@ -316,7 +315,7 @@ lat_objeto* lat_definir_cfuncion(lat_mv* mv, void (*function)(lat_mv* mv))
     return ret;
 }
 
-void lat_numero_lista(lat_mv* mv)
+/*void lat_numero_lista(lat_mv* mv)
 {
     lat_objeto* index = lat_desapilar(mv);
     long i = lat_obtener_entero(index);
@@ -334,7 +333,7 @@ void lat_numero_lista(lat_mv* mv)
         }
     }
     lat_registrar_error("Lista: indice fuera de rango");
-}
+}*/
 
 static void lat_imprimir_elem(lat_mv* mv)
 {
@@ -496,13 +495,13 @@ void lat_imprimir_diccionario(lat_mv* mv, hash_map* d)
     }
 }*/
 
-void lat_clonar(lat_mv* mv)
+/*void lat_clonar(lat_mv* mv)
 {
     lat_objeto* ns = lat_desapilar(mv);
     lat_apilar(mv, lat_clonar_objeto(mv, ns));
-}
+}*/
 
-void lat_cons(lat_mv* mv)
+/*void lat_cons(lat_mv* mv)
 {
     lat_objeto* lista = lat_desapilar(mv);
     lat_objeto* elem = lat_desapilar(mv);
@@ -511,7 +510,7 @@ void lat_cons(lat_mv* mv)
     ret->next->next = lista->datos.lista;
     lista->datos.lista->prev = ret->next;
     lat_apilar(mv, lat_lista_nueva(mv, ret));
-}
+}*/
 
 void lat_sumar(lat_mv* mv)
 {
@@ -1090,7 +1089,7 @@ void lat_cadena(lat_mv* mv)
     }
 }
 
-void lat_maximo(lat_mv* mv)
+/*void lat_maximo(lat_mv* mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
@@ -1099,9 +1098,9 @@ void lat_maximo(lat_mv* mv)
     } else {
         lat_apilar(mv, a);
     }
-}
+}*/
 
-void lat_minimo(lat_mv* mv)
+/*void lat_minimo(lat_mv* mv)
 {
     lat_objeto* b = lat_desapilar(mv);
     lat_objeto* a = lat_desapilar(mv);
@@ -1110,7 +1109,7 @@ void lat_minimo(lat_mv* mv)
     } else {
         lat_apilar(mv, a);
     }
-}
+}*/
 
 void lat_tipo(lat_mv* mv)
 {
